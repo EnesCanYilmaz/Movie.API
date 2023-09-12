@@ -17,7 +17,7 @@ namespace MovieAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -275,19 +275,27 @@ namespace MovieAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("MovieTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<int?>("ProductImageId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("VisionDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ProductImageId");
 
                     b.ToTable("Movies");
                 });
@@ -318,6 +326,31 @@ namespace MovieAPI.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("Player");
+                });
+
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -379,6 +412,10 @@ namespace MovieAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", null)
+                        .WithMany("Movies")
+                        .HasForeignKey("ProductImageId");
+
                     b.Navigation("Category");
                 });
 
@@ -401,6 +438,11 @@ namespace MovieAPI.Migrations
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", b =>
                 {
                     b.Navigation("Players");
+                });
+
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", b =>
+                {
+                    b.Navigation("Movies");
                 });
 #pragma warning restore 612, 618
         }

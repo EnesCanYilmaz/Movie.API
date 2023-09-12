@@ -31,16 +31,15 @@ public class CategoryController : Controller
                 MovieName = m.Name,
                 Description = m.Description,
                 CategoryId = m.Category.Id,
+                CategoryName = m.Category.Name,
                 Director = m.Director,
-                ReleaseDate = m.VisionDate.ToString("dd-MM-yyyy")
+                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
+                MovieTime = m.MovieTime.ToString("t")
             }).ToList()
         }).ToListAsync();
 
 
-        if (categories is null)
-        {
-            return NotFound();
-        }
+        if (categories is null) return NotFound();
 
         return Ok(categories);
     }
@@ -58,14 +57,14 @@ public class CategoryController : Controller
                 MovieName = m.Name,
                 Description = m.Description,
                 CategoryId = m.Category.Id,
+                CategoryName = m.Category.Name,
                 Director = m.Director,
-                ReleaseDate = m.VisionDate.ToString("dd-MM-yyyy")
+                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy")
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
 
 
-        if (categories is null)
-            return NotFound();
+        if (categories is null) return NotFound();
 
         return Ok(categories);
     }
@@ -91,25 +90,23 @@ public class CategoryController : Controller
     [HttpPut("{id}")]
     public async Task<ActionResult> Put(int id, string categoryName)
     {
-        if (string.IsNullOrWhiteSpace(categoryName))
-            return BadRequest("Category name cannot be empty.");
-
         var existingCategory = await _context.Categories.FindAsync(id);
-        if (existingCategory == null)
-            return NotFound();
+        if (existingCategory is null) return NotFound();
+
+        if (string.IsNullOrWhiteSpace(categoryName)) return BadRequest("Category name cannot be empty.");
 
         existingCategory.Name = categoryName;
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok(existingCategory);
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-        if (category is null)
-            return NotFound();
+        if (category is null) return NotFound();
 
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using MovieAPI.FileRename;
 using MovieAPI.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructureServices();
+builder.Services.AddScoped<IFileService, FileService>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

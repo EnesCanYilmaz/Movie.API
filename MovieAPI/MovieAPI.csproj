@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,12 +34,13 @@
     <None Remove="Infrastructure\Data\Entities\Player\" />
     <None Remove="DTO\" />
     <None Remove="DTO\Category\" />
+    <None Remove="DTO\Movie\" />
+    <None Remove="Services\File\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Infrastructure\" />
     <Folder Include="Infrastructure\Data\" />
-    <Folder Include="Infrastructure\Data\Entities\" />
     <Folder Include="Infrastructure\Data\Entities\App\" />
     <Folder Include="Infrastructure\Data\Base\" />
     <Folder Include="Infrastructure\Data\Context\" />
@@ -47,5 +49,8 @@
     <Folder Include="Infrastructure\Data\Entities\Player\" />
     <Folder Include="DTO\" />
     <Folder Include="DTO\Category\" />
+    <Folder Include="wwwroot\" />
+    <Folder Include="DTO\Movie\" />
+    <Folder Include="Services\File\" />
   </ItemGroup>
 </Project>
