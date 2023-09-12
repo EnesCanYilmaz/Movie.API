@@ -99,6 +99,7 @@ public class MovieController : Controller
     [HttpPost("action")]
     public async Task<IActionResult> UploadPhoto(int id, IFormFileCollection? Files)
     {
+        
         List<(string fileName, string pathOrContainerName)>? result = await
             _fileService.UploadAsync("photo", Files);
         
