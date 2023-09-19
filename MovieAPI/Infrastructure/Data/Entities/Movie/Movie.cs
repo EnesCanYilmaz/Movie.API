@@ -14,6 +14,8 @@ public class Movie : BaseEntity
 
     //Relationships
     public virtual Category.Category Category { get; set; }
+    public virtual Platform.Platform Platform { get; set; }
+
     public List<Player.Player> Players { get; set; }
 
 }
