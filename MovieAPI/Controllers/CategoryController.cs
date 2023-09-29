@@ -4,7 +4,6 @@ using MovieAPI.DTO;
 using MovieAPI.DTO.Category;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Category;
-using MovieAPI.Infrastructure.Data.Entities.Movie;
 
 namespace MovieAPI.Controllers;
 
@@ -32,6 +31,8 @@ public class CategoryController : Controller
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
+                PlatformId = m.PlatformId,
+                PlatformName = m.Platform.Name,
                 Director = m.Director,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
                 MovieTime = m.MovieTime.ToString("hh/mm")
@@ -41,7 +42,7 @@ public class CategoryController : Controller
 
         return categories is not null
             ? Ok(categories)
-            : NotFound("Categories not found");
+            : NotFound("Categories not found!");
     }
 
     [HttpGet("[action]{id}")]
@@ -67,7 +68,7 @@ public class CategoryController : Controller
 
         return category is not null
             ? Ok(category)
-            : NotFound();
+            : NotFound("Category Id not found!");
     }
 
     [HttpPost("[action]")]
@@ -82,13 +83,11 @@ public class CategoryController : Controller
             CreatedDate = DateTime.Now
         };
 
-        var addedResult = await _context.Categories.AddAsync(category);
-        var saveChangesResult = await _context.SaveChangesAsync();
+        await _context.Categories.AddAsync(category);
 
-        if (addedResult.State == EntityState.Deleted && saveChangesResult > 0)
-            return Ok("Category Added!");
-        else
-            return StatusCode(500, "Category not Added!");
+        return await _context.SaveChangesAsync() > 0
+            ? Ok("Category Added")
+            : StatusCode(500, "Category not Added");
     }
 
     [HttpPut("[action]{id}")]
@@ -114,14 +113,14 @@ public class CategoryController : Controller
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-        if (category is null) return NotFound("Category Not Found!");
 
-        var removeResult = _context.Categories.Remove(category);
-        var saveChangesResult = await _context.SaveChangesAsync();
+        if (category is null)
+            return NotFound("Category Not Found!");
 
-        if (removeResult.State == EntityState.Deleted && saveChangesResult > 0)
-            return Ok("Category Deleted!");
-        else
-            return StatusCode(500, "Category not Deleted!");
+        _context.Categories.Remove(category);
+
+        return await _context.SaveChangesAsync() > 0
+            ? Ok("Category Deleted")
+            : StatusCode(500, "Category not Deleted");
     }
 }

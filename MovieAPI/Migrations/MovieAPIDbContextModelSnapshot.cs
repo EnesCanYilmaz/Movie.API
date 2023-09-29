@@ -282,6 +282,9 @@ namespace MovieAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PlatformId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ProductImageId")
                         .HasColumnType("int");
 
@@ -295,12 +298,14 @@ namespace MovieAPI.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("PlatformId");
+
                     b.HasIndex("ProductImageId");
 
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Player.Player", b =>
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Platform.Platform", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -311,9 +316,6 @@ namespace MovieAPI.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -323,9 +325,7 @@ namespace MovieAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("Player");
+                    b.ToTable("Platforms");
                 });
 
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", b =>
@@ -412,22 +412,19 @@ namespace MovieAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MovieAPI.Infrastructure.Data.Entities.Platform.Platform", "Platform")
+                        .WithMany("Movies")
+                        .HasForeignKey("PlatformId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", null)
                         .WithMany("Movies")
                         .HasForeignKey("ProductImageId");
 
                     b.Navigation("Category");
-                });
 
-            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Player.Player", b =>
-                {
-                    b.HasOne("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", "Movie")
-                        .WithMany("Players")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
+                    b.Navigation("Platform");
                 });
 
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Category.Category", b =>
@@ -435,9 +432,9 @@ namespace MovieAPI.Migrations
                     b.Navigation("Movies");
                 });
 
-            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", b =>
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Platform.Platform", b =>
                 {
-                    b.Navigation("Players");
+                    b.Navigation("Movies");
                 });
 
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", b =>

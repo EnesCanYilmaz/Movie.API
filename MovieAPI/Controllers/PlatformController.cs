@@ -7,6 +7,7 @@ using MovieAPI.Infrastructure.Data.Entities.Platform;
 
 namespace MovieAPI.Controllers;
 
+[Route("api/[controller]")]
 public class PlatformController : Controller
 { 
     private readonly MovieAPIDbContext _context;
@@ -16,8 +17,8 @@ public class PlatformController : Controller
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetAllPlatforms()
     {
         var platforms = await _context.Platforms.Select(c => new PlatformDTO
         {
@@ -30,24 +31,24 @@ public class PlatformController : Controller
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
-                PlatformName = m.Platform.Name,
                 PlatformId = m.Platform.Id,
+                PlatformName = m.Platform.Name,
                 Director = m.Director,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
-                MovieTime = m.MovieTime.ToString("t")
+                MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()
         }).ToListAsync();
 
 
-        if (platforms is null) return NotFound();
-
-        return Ok(platforms);
+        return platforms is not null
+            ? Ok(platforms)
+            : NotFound("Platforms not found!");
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    [HttpGet("[action]/{id}")]
+    public async Task<IActionResult> GetByPlatformId(int id)
     {
-        var platforms = await _context.Platforms.Select(c => new PlatformDTO
+        var platform = await _context.Platforms.Select(c => new PlatformDTO
         {
             Id = c.Id,
             Name = c.Name,
@@ -58,21 +59,22 @@ public class PlatformController : Controller
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
-                PlatformName = m.Platform.Name,
                 PlatformId = m.Platform.Id,
+                PlatformName = m.Platform.Name,
                 Director = m.Director,
-                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy")
+                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
+                MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
 
 
-        if (platforms is null) return NotFound();
-
-        return Ok(platforms);
+        return platform is not null
+         ? Ok(platform)
+         : NotFound("Platform Id not found!");
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Post(string platformName)
+    [HttpPost("[action]")]
+    public async Task<IActionResult> CreatePlatform(string platformName)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -84,35 +86,44 @@ public class PlatformController : Controller
         };
 
         await _context.Platforms.AddAsync(platform);
-        await _context.SaveChangesAsync();
 
-        return Ok(platform);
+        return await _context.SaveChangesAsync() > 0
+            ? StatusCode(200, "Platform Added")
+            : StatusCode(500, "Platform not Added!");
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> Put(int id, string platformName)
+    [HttpPut("[action]/{id}")]
+    public async Task<ActionResult> UpdatePlatform(int id, string platformName)
     {
         var existingPlatform = await _context.Platforms.FindAsync(id);
-        if (existingPlatform is null) return NotFound();
 
-        if (string.IsNullOrWhiteSpace(platformName)) return BadRequest("Platform name cannot be empty.");
+        if (existingPlatform is null)
+            return NotFound("Platform not found!");
+
+        if (string.IsNullOrWhiteSpace(platformName))
+            return BadRequest("Platform Name cannot be empty.");
 
         existingPlatform.Name = platformName;
-        await _context.SaveChangesAsync();
+        existingPlatform.UpdatedDate = DateTime.Now;
 
-        return Ok(existingPlatform);
+        return await _context.SaveChangesAsync() > 0
+            ? Ok(existingPlatform)
+            : NotFound("Category not Updated!");
     }
 
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("[action]/{id}")]
+    public async Task<IActionResult> DeletePlatform(int id)
     {
         var platform = await _context.Platforms.FirstOrDefaultAsync(c => c.Id == id);
-        if (platform is null) return NotFound();
+
+        if (platform is null)
+            return NotFound("Platform not found!");
 
         _context.Platforms.Remove(platform);
-        await _context.SaveChangesAsync();
 
-        return Ok(platform);
+        return await _context.SaveChangesAsync() > 0
+            ? Ok("Platform Deleted!")
+            : StatusCode(500, "Platforn not Deleted");
     }
 }
