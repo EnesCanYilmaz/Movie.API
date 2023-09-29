@@ -18,8 +18,8 @@ public class CategoryController : Controller
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetAllCategories()
     {
         var categories = await _context.Categories.Select(c => new CategoryDTO
         {
@@ -28,49 +28,50 @@ public class CategoryController : Controller
             Movies = c.Movies.Select(m => new MovieDTO
             {
                 Id = m.Id,
-                MovieName = m.Name,
+                Name = m.Name,
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
                 Director = m.Director,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
-                MovieTime = m.MovieTime.ToString("t")
+                MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()
         }).ToListAsync();
 
 
-        if (categories is null) return NotFound();
-
-        return Ok(categories);
+        return categories is not null
+            ? Ok(categories)
+            : NotFound("Categories not found");
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    [HttpGet("[action]{id}")]
+    public async Task<IActionResult> GetByCategoryId(int id)
     {
-        var categories = await _context.Categories.Select(c => new CategoryDTO
+        var category = await _context.Categories.Select(c => new CategoryDTO
         {
             Id = c.Id,
             Name = c.Name,
             Movies = c.Movies.Select(m => new MovieDTO
             {
                 Id = m.Id,
-                MovieName = m.Name,
+                Name = m.Name,
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
                 Director = m.Director,
-                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy")
+                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
+                MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
 
 
-        if (categories is null) return NotFound();
-
-        return Ok(categories);
+        return category is not null
+            ? Ok(category)
+            : NotFound();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Post(string categoryName)
+    [HttpPost("[action]")]
+    public async Task<IActionResult> CreateCategory(string categoryName)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -81,36 +82,46 @@ public class CategoryController : Controller
             CreatedDate = DateTime.Now
         };
 
-        await _context.Categories.AddAsync(category);
-        await _context.SaveChangesAsync();
+        var addedResult = await _context.Categories.AddAsync(category);
+        var saveChangesResult = await _context.SaveChangesAsync();
 
-        return Ok(category);
+        if (addedResult.State == EntityState.Deleted && saveChangesResult > 0)
+            return Ok("Category Added!");
+        else
+            return StatusCode(500, "Category not Added!");
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> Put(int id, string categoryName)
+    [HttpPut("[action]{id}")]
+    public async Task<ActionResult> UpdateCategory(int id, string categoryName)
     {
         var existingCategory = await _context.Categories.FindAsync(id);
-        if (existingCategory is null) return NotFound();
 
-        if (string.IsNullOrWhiteSpace(categoryName)) return BadRequest("Category name cannot be empty.");
+        if (existingCategory is null)
+            return NotFound("Category not found!");
+
+        if (string.IsNullOrWhiteSpace(categoryName))
+            return BadRequest("Category name cannot be empty!");
 
         existingCategory.Name = categoryName;
-        await _context.SaveChangesAsync();
 
-        return Ok(existingCategory);
+        return await _context.SaveChangesAsync() > 0
+            ? Ok("Category Updated!")
+            : StatusCode(500, "Category not Updated!");
     }
 
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("[action]{id}")]
+    public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-        if (category is null) return NotFound();
+        if (category is null) return NotFound("Category Not Found!");
 
-        _context.Categories.Remove(category);
-        await _context.SaveChangesAsync();
+        var removeResult = _context.Categories.Remove(category);
+        var saveChangesResult = await _context.SaveChangesAsync();
 
-        return Ok(category);
+        if (removeResult.State == EntityState.Deleted && saveChangesResult > 0)
+            return Ok("Category Deleted!");
+        else
+            return StatusCode(500, "Category not Deleted!");
     }
 }

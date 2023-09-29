@@ -27,7 +27,7 @@ public class MovieController : Controller
         var movies = await _context.Movies.Select(m => new MovieDTO
         {
             Id = m.Id,
-            MovieName = m.Name,
+            Name = m.Name,
             Description = m.Description,
             CategoryName = m.Category.Name,
             Director = m.Director,
@@ -53,11 +53,12 @@ public class MovieController : Controller
     {
         var movie = new Movie
         {
-            Name = movieDTO.MovieName,
+            Name = movieDTO.Name,
             Description = movieDTO.Description,
             ReleaseDate = Convert.ToDateTime(movieDTO.ReleaseDate),
             Director = movieDTO.Director,
             CategoryId = movieDTO.CategoryId,
+            PlatformId = movieDTO.PlatformId,
             MovieTime = Convert.ToDateTime(movieDTO.MovieTime)
         };
 
@@ -68,12 +69,23 @@ public class MovieController : Controller
 
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] Movie updatedMovie)
+    public async Task<IActionResult> Put(int id, [FromBody] MovieDTO updatedMovie)
     {
         if (id != updatedMovie.Id)
             return BadRequest();
 
-        _context.Movies.Update(updatedMovie);
+        Movie movie = new()
+        {
+            Name = updatedMovie.Name,
+            Description = updatedMovie.Description,
+            ReleaseDate = Convert.ToDateTime(updatedMovie.ReleaseDate),
+            Director = updatedMovie.Director,
+            CategoryId = updatedMovie.CategoryId,
+            PlatformId = updatedMovie.PlatformId,
+            MovieTime = Convert.ToDateTime(updatedMovie.MovieTime)
+        };
+
+        _context.Entry(movie).State = EntityState.Modified;
         await _context.SaveChangesAsync();
 
         return Ok();

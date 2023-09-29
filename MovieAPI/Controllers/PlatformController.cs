@@ -26,7 +26,7 @@ public class PlatformController : Controller
             Movies = c.Movies.Select(m => new MovieDTO
             {
                 Id = m.Id,
-                MovieName = m.Name,
+                Name = m.Name,
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
@@ -54,7 +54,7 @@ public class PlatformController : Controller
             Movies = c.Movies.Select(m => new MovieDTO
             {
                 Id = m.Id,
-                MovieName = m.Name,
+                Name = m.Name,
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,

@@ -11,11 +11,9 @@ public class Movie : BaseEntity
     public string Director { get; set; }
     public DateTime MovieTime { get; set; }
     public int CategoryId { get; set; }
+    public int PlatformId { get; set; }
 
     //Relationships
     public virtual Category.Category Category { get; set; }
     public virtual Platform.Platform Platform { get; set; }
-
-    public List<Player.Player> Players { get; set; }
-
 }
