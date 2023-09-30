@@ -33,7 +33,6 @@ public class CategoryController : Controller
                 CategoryName = m.Category.Name,
                 PlatformId = m.PlatformId,
                 PlatformName = m.Platform.Name,
-                Director = m.Director,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
                 MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()
@@ -45,7 +44,7 @@ public class CategoryController : Controller
             : NotFound("Categories not found!");
     }
 
-    [HttpGet("[action]{id}")]
+    [HttpGet("[action]/{id}")]
     public async Task<IActionResult> GetByCategoryId(int id)
     {
         var category = await _context.Categories.Select(c => new CategoryDTO
@@ -59,7 +58,8 @@ public class CategoryController : Controller
                 Description = m.Description,
                 CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
-                Director = m.Director,
+                PlatformId = m.Platform.Id,
+                PlatformName = m.Platform.Name,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
                 MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()
@@ -90,7 +90,7 @@ public class CategoryController : Controller
             : StatusCode(500, "Category not Added");
     }
 
-    [HttpPut("[action]{id}")]
+    [HttpPut("[action]/{id}")]
     public async Task<ActionResult> UpdateCategory(int id, string categoryName)
     {
         var existingCategory = await _context.Categories.FindAsync(id);

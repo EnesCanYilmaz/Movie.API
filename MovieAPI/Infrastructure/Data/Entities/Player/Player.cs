@@ -9,7 +9,6 @@ public class Player : BaseEntity
 	public string Name { get; set; }
     public int MovieId { get; set; }
 
-
     //Relationships
     public virtual Movie.Movie Movie { get; set; }
 }

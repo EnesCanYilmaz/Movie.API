@@ -33,7 +33,6 @@ public class PlatformController : Controller
                 CategoryName = m.Category.Name,
                 PlatformId = m.Platform.Id,
                 PlatformName = m.Platform.Name,
-                Director = m.Director,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
                 MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()
@@ -61,7 +60,6 @@ public class PlatformController : Controller
                 CategoryName = m.Category.Name,
                 PlatformId = m.Platform.Id,
                 PlatformName = m.Platform.Name,
-                Director = m.Director,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
                 MovieTime = m.MovieTime.ToString("hh/mm")
             }).ToList()

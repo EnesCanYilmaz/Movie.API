@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using MovieAPI.Infrastructure.Data.Base;
 using MovieAPI.Infrastructure.Data.Entities.App;
 using MovieAPI.Infrastructure.Data.Entities.Category;
+using MovieAPI.Infrastructure.Data.Entities.Director;
 using MovieAPI.Infrastructure.Data.Entities.Movie;
 using MovieAPI.Infrastructure.Data.Entities.Platform;
+using MovieAPI.Infrastructure.Data.Entities.Player;
 using MovieAPI.Infrastructure.Data.Entities.ProductImage;
 
 namespace MovieAPI.Infrastructure.Data.Context;
@@ -32,11 +34,13 @@ public class MovieAPIDbContext : IdentityDbContext<AppUser, AppRole, int>
 
         return await base.SaveChangesAsync(cancellationToken);
     }
+
     public DbSet<Category> Categories { get; set; }
     public DbSet<Platform> Platforms { get; set; }
     public DbSet<Movie> Movies { get; set; }
     public DbSet<ProductImage> ProductImages { get; set; }
-
+    public DbSet<Director> Directors { get; set; }
+    public DbSet<Player> Players { get; set; }
 
 }
 

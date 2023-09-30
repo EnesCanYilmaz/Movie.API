@@ -36,6 +36,9 @@
     <None Remove="DTO\Category\" />
     <None Remove="DTO\Movie\" />
     <None Remove="Services\File\" />
+    <None Remove="Infrastructure\Data\Entities\Director\" />
+    <None Remove="DTO\Director\" />
+    <None Remove="DTO\Player\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Infrastructure\" />
@@ -50,5 +53,8 @@
     <Folder Include="wwwroot\" />
     <Folder Include="DTO\Movie\" />
     <Folder Include="Services\File\" />
+    <Folder Include="Infrastructure\Data\Entities\Director\" />
+    <Folder Include="DTO\Director\" />
+    <Folder Include="DTO\Player\" />
   </ItemGroup>
 </Project>
