@@ -15,6 +15,7 @@ public class CategoryController : Controller
     public CategoryController(MovieAPIDbContext context)
     {
         _context = context;
+
     }
 
     [HttpGet("[action]")]
