@@ -8,7 +8,7 @@ using MovieAPI.Infrastructure.Data.Entities.Director;
 using MovieAPI.Infrastructure.Data.Entities.Movie;
 using MovieAPI.Infrastructure.Data.Entities.Platform;
 using MovieAPI.Infrastructure.Data.Entities.Player;
-using MovieAPI.Infrastructure.Data.Entities.ProductImage;
+using MovieAPI.Infrastructure.Data.Entities.MovieImage;
 
 namespace MovieAPI.Infrastructure.Data.Context;
 
@@ -18,6 +18,7 @@ public class MovieAPIDbContext : IdentityDbContext<AppUser, AppRole, int>
     {
 
     }
+
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var datas = ChangeTracker.Entries<BaseEntity>();
@@ -35,10 +36,18 @@ public class MovieAPIDbContext : IdentityDbContext<AppUser, AppRole, int>
         return await base.SaveChangesAsync(cancellationToken);
     }
 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Movie>().HasMany(m => m.MovieImages).WithOne(p => p.Movie).HasForeignKey(p => p.MovieId);
+
+        base.OnModelCreating(builder);
+        base.OnModelCreating(builder);
+    }
+
     public DbSet<Category> Categories { get; set; }
     public DbSet<Platform> Platforms { get; set; }
     public DbSet<Movie> Movies { get; set; }
-    public DbSet<ProductImage> ProductImages { get; set; }
+    public DbSet<MovieImage> MovieImages { get; set; }
     public DbSet<Director> Directors { get; set; }
     public DbSet<Player> Players { get; set; }
 

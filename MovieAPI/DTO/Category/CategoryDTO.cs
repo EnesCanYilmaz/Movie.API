@@ -1,5 +1,4 @@
-﻿using System;
-namespace MovieAPI.DTO.Category;
+﻿namespace MovieAPI.DTO.Category;
 
 public class CategoryDTO
 {

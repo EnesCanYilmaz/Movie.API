@@ -1,6 +1,4 @@
-﻿using System;
-using MovieAPI.Infrastructure.Data.Base;
-using MovieAPI.Infrastructure.Data.Entities.Movie;
+﻿using MovieAPI.Infrastructure.Data.Base;
 
 namespace MovieAPI.Infrastructure.Data.Entities.Player;
 

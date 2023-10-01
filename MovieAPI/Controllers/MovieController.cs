@@ -1,15 +1,14 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.DTO;
 using MovieAPI.DTO.Director;
-using MovieAPI.DTO.Platform;
+using MovieAPI.DTO.Movie;
+using MovieAPI.DTO.MovieImageDTO;
 using MovieAPI.DTO.Player;
 using MovieAPI.FileRename;
 using MovieAPI.Infrastructure.Data.Context;
-using MovieAPI.Infrastructure.Data.Entities.Category;
 using MovieAPI.Infrastructure.Data.Entities.Movie;
-using MovieAPI.Infrastructure.Data.Entities.ProductImage;
+using MovieAPI.Infrastructure.Data.Entities.MovieImage;
 
 namespace MovieAPI.Controllers;
 
@@ -33,12 +32,27 @@ public class MovieController : Controller
             Id = m.Id,
             Name = m.Name,
             Description = m.Description,
+            CategoryId = m.CategoryId,
             CategoryName = m.Category.Name,
-            ReleaseDate = m.ReleaseDate.ToString("dd/mm/yyyy")
-
+            PlatformId = m.PlatformId,
+            PlatformName = m.Platform.Name,
+            ReleaseDate = m.ReleaseDate.ToString("dd/MM/yyyy"),
+            MovieTime = m.MovieTime,
+            Players = m.Players.Select(p => new PlayerDTO
+            {
+                Id = p.Id,
+                Name = p.Name
+            }).ToList(),
+            Directors = m.Directors.Select(p => new DirectorDTO
+            {
+                Id = p.Id,
+                Name = p.Name
+            }).ToList()
         }).ToListAsync();
 
-        return movies is null ? Ok(movies) : StatusCode(500, "Movies not found");
+        return movies is not null
+            ? Ok(movies)
+            : StatusCode(500, "Movies not found");
     }
 
     [HttpGet("[action]/{id}")]
@@ -54,7 +68,7 @@ public class MovieController : Controller
             PlatformId = m.Platform.Id,
             PlatformName = m.Platform.Name,
             ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
-            MovieTime = m.MovieTime.ToString("hh/mm"),
+            MovieTime = m.MovieTime,
             Directors = m.Directors.Select(d => new DirectorDTO
             {
                 Name = d.Name
@@ -63,7 +77,6 @@ public class MovieController : Controller
             {
                 Name = p.Name
             }).ToList()
-
         }).FirstOrDefaultAsync(m => m.Id == id);
 
 
@@ -73,23 +86,26 @@ public class MovieController : Controller
     }
 
     [HttpPost("[action]")]
-    public async Task<ActionResult<Movie>> CreateMovie([FromBody] MovieDTO movieDTO)
+    public async Task<IActionResult> CreateMovie([FromBody] CreateMovieDTO createMovieDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
 
         var movie = new Movie
         {
-            Name = movieDTO.Name,
-            Description = movieDTO.Description,
-            ReleaseDate = Convert.ToDateTime(movieDTO.ReleaseDate),
-            CategoryId = movieDTO.CategoryId,
-            PlatformId = movieDTO.PlatformId,
-            MovieTime = Convert.ToDateTime(movieDTO.MovieTime)
+            Name = createMovieDTO.Name,
+            Description = createMovieDTO.Description,
+            ReleaseDate = Convert.ToDateTime(createMovieDTO.ReleaseDate),
+            CategoryId = createMovieDTO.CategoryId,
+            PlatformId = createMovieDTO.PlatformId,
+            MovieTime = createMovieDTO.MovieTime
         };
 
         await _context.Movies.AddAsync(movie);
-        return await _context.SaveChangesAsync() > 0 ? Ok("Movie Added") : StatusCode(500, "Movie not added");
+
+        return await _context.SaveChangesAsync() > 0
+            ? Ok("Movie Added")
+            : StatusCode(500, "Movie not added");
     }
 
 
@@ -106,7 +122,7 @@ public class MovieController : Controller
         existingMovies.ReleaseDate = Convert.ToDateTime(updatedMovie.ReleaseDate);
         existingMovies.CategoryId = updatedMovie.CategoryId;
         existingMovies.PlatformId = updatedMovie.PlatformId;
-        existingMovies.MovieTime = Convert.ToDateTime(updatedMovie.MovieTime);
+        existingMovies.MovieTime = updatedMovie.MovieTime;
 
         return await _context.SaveChangesAsync() > 0
             ? Ok("Movie Updated!")
@@ -124,15 +140,17 @@ public class MovieController : Controller
 
         _context.Movies.Remove(movie);
 
-        return await _context.SaveChangesAsync() > 0 ? Ok("Movie Deleted!") : StatusCode(500, "Movie not deleted");
+        return await _context.SaveChangesAsync() > 0
+            ? Ok("Movie Deleted!")
+            : StatusCode(500, "Movie not deleted");
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> UploadPhoto(int id, IFormFileCollection? Files)
+    public async Task<IActionResult> UploadPhoto(int id, IFormFileCollection? files)
     {
 
         List<(string fileName, string pathOrContainerName)>? result = await
-            _fileService.UploadAsync("photo", Files);
+            _fileService.UploadAsync("photo", files);
 
         if (result is null)
             return BadRequest("Photo not upload");
@@ -142,34 +160,34 @@ public class MovieController : Controller
         if (movie is null)
             return NotFound("Movie not found");
 
-        await _context.ProductImages.AddRangeAsync(result.Select(r => new ProductImage
+        await _context.MovieImages.AddRangeAsync(result.Select(r => new MovieImage
         {
             FileName = r.fileName,
             Path = r.pathOrContainerName,
-            Movies = new List<Movie>() { movie }
+            MovieId = movie.Id
         }).ToList());
 
-        return await _context.SaveChangesAsync() > 0 ? Ok("Movie photo added!") : StatusCode(500, "Movie photo not added!");
+        return await _context.SaveChangesAsync() > 0
+            ? Ok("Movie photo added!")
+            : StatusCode(500, "Movie photo not added!");
     }
 
-    [HttpGet("getPhotos")]
-    public async Task<IActionResult> GetPhotos(int id)
-    {
-        var photos = await _context.ProductImages
-            .Where(pi => pi.Movies.Any(m => m.Id == id))
-            .Select(pi => new
-            {
-                FileName = pi.FileName,
-                Path = pi.Path
-            })
-            .ToListAsync();
+    //[HttpGet("getPhotos")]
+    //public async Task<IActionResult> GetPhotos(int id)
+    //{
+    //    var photos = await _context.MovieImages
+    //        .Where(p => p.Movie.Any(p => p.Id == id))
+    //        .Select(m => new MovieImageDTO
+    //        {
+    //            FileName = m.FileName,
+    //            Path = m.Path
+    //        })
+    //        .ToListAsync();
 
-        if (photos.Count == 0)
-        {
-            return NotFound();
-        }
+    //    if (photos.Count == 0)
+    //        return NotFound();
 
-        return Ok(photos);
-    }
+    //    return Ok(photos);
+    //}
 }
 

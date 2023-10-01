@@ -253,6 +253,34 @@ namespace MovieAPI.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Director.Director", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("Directors");
+                });
+
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -271,21 +299,15 @@ namespace MovieAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Director")
+                    b.Property<string>("MovieTime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("MovieTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PlatformId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductImageId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ReleaseDate")
@@ -300,9 +322,37 @@ namespace MovieAPI.Migrations
 
                     b.HasIndex("PlatformId");
 
-                    b.HasIndex("ProductImageId");
-
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.MovieImage.MovieImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieImages");
                 });
 
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Platform.Platform", b =>
@@ -328,7 +378,7 @@ namespace MovieAPI.Migrations
                     b.ToTable("Platforms");
                 });
 
-            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", b =>
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Player.Player", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -339,10 +389,11 @@ namespace MovieAPI.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Path")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -350,7 +401,9 @@ namespace MovieAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductImages");
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -404,6 +457,17 @@ namespace MovieAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Director.Director", b =>
+                {
+                    b.HasOne("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", "Movie")
+                        .WithMany("Directors")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", b =>
                 {
                     b.HasOne("MovieAPI.Infrastructure.Data.Entities.Category.Category", "Category")
@@ -418,13 +482,31 @@ namespace MovieAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", null)
-                        .WithMany("Movies")
-                        .HasForeignKey("ProductImageId");
-
                     b.Navigation("Category");
 
                     b.Navigation("Platform");
+                });
+
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.MovieImage.MovieImage", b =>
+                {
+                    b.HasOne("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", "Movie")
+                        .WithMany("MovieImages")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Player.Player", b =>
+                {
+                    b.HasOne("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", "Movie")
+                        .WithMany("Players")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
                 });
 
             modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Category.Category", b =>
@@ -432,12 +514,16 @@ namespace MovieAPI.Migrations
                     b.Navigation("Movies");
                 });
 
-            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Platform.Platform", b =>
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Movie.Movie", b =>
                 {
-                    b.Navigation("Movies");
+                    b.Navigation("Directors");
+
+                    b.Navigation("MovieImages");
+
+                    b.Navigation("Players");
                 });
 
-            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.ProductImage.ProductImage", b =>
+            modelBuilder.Entity("MovieAPI.Infrastructure.Data.Entities.Platform.Platform", b =>
                 {
                     b.Navigation("Movies");
                 });

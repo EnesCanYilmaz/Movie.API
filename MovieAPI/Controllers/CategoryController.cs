@@ -24,20 +24,7 @@ public class CategoryController : Controller
         {
             Id = c.Id,
             Name = c.Name,
-            Movies = c.Movies.Select(m => new MovieDTO
-            {
-                Id = m.Id,
-                Name = m.Name,
-                Description = m.Description,
-                CategoryId = m.Category.Id,
-                CategoryName = m.Category.Name,
-                PlatformId = m.PlatformId,
-                PlatformName = m.Platform.Name,
-                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
-                MovieTime = m.MovieTime.ToString("hh/mm")
-            }).ToList()
         }).ToListAsync();
-
 
         return categories is not null
             ? Ok(categories)
@@ -61,10 +48,9 @@ public class CategoryController : Controller
                 PlatformId = m.Platform.Id,
                 PlatformName = m.Platform.Name,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
-                MovieTime = m.MovieTime.ToString("hh/mm")
+                MovieTime = m.MovieTime
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
-
 
         return category is not null
             ? Ok(category)
