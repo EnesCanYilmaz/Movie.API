@@ -1,7 +1,7 @@
 ﻿using System;
-namespace MovieAPI.DTO.Player
+namespace MovieAPI.DTO.DirectorDTO
 {
-	public class PlayerDTO
+	public class DirectorDTO
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }

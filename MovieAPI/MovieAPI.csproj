@@ -35,13 +35,13 @@
     <None Remove="Infrastructure\Data\Entities\Category\" />
     <None Remove="Infrastructure\Data\Entities\Player\" />
     <None Remove="DTO\" />
-    <None Remove="DTO\Category\" />
-    <None Remove="DTO\Movie\" />
     <None Remove="Services\File\" />
     <None Remove="Infrastructure\Data\Entities\Director\" />
-    <None Remove="DTO\Director\" />
-    <None Remove="DTO\Player\" />
-    <None Remove="DTO\MovieImage\" />
+    <None Remove="DTO\MovieDTO\" />
+    <None Remove="DTO\CategoryDTO\" />
+    <None Remove="DTO\DirectorDTO\" />
+    <None Remove="DTO\MovieImageDTO\" />
+    <None Remove="DTO\PlayerDTO\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Infrastructure\" />
@@ -52,14 +52,14 @@
     <Folder Include="Infrastructure\Data\Entities\Movie\" />
     <Folder Include="Infrastructure\Data\Entities\Category\" />
     <Folder Include="Infrastructure\Data\Entities\Player\" />
-    <Folder Include="DTO\Category\" />
     <Folder Include="wwwroot\" />
-    <Folder Include="DTO\Movie\" />
     <Folder Include="Services\File\" />
     <Folder Include="Infrastructure\Data\Entities\Director\" />
-    <Folder Include="DTO\Director\" />
-    <Folder Include="DTO\Player\" />
-    <Folder Include="DTO\MovieImage\" />
+    <Folder Include="DTO\MovieDTO\" />
+    <Folder Include="DTO\CategoryDTO\" />
+    <Folder Include="DTO\DirectorDTO\" />
+    <Folder Include="DTO\MovieImageDTO\" />
+    <Folder Include="DTO\PlayerDTO\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20230930223133_mig_1.Designer.cs" />

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.DTO;
 using MovieAPI.DTO.Category;
+using MovieAPI.DTO.MovieDTO;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Category;
 

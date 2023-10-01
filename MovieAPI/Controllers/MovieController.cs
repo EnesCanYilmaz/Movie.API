@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieAPI.DTO;
-using MovieAPI.DTO.Director;
-using MovieAPI.DTO.Movie;
-using MovieAPI.DTO.MovieImageDTO;
-using MovieAPI.DTO.Player;
+using MovieAPI.DTO.DirectorDTO;
+using MovieAPI.DTO.MovieDTO;
+using MovieAPI.DTO.PlayerDTO;
 using MovieAPI.FileRename;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Movie;
@@ -40,7 +38,6 @@ public class MovieController : Controller
             MovieTime = m.MovieTime,
             Players = m.Players.Select(p => new PlayerDTO
             {
-                Id = p.Id,
                 Name = p.Name
             }).ToList(),
             Directors = m.Directors.Select(p => new DirectorDTO
@@ -86,7 +83,7 @@ public class MovieController : Controller
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateMovie([FromBody] CreateMovieDTO createMovieDTO)
+    public async Task<IActionResult> CreateMovie([FromBody] DTO.MovieDTO.CreateMovieDTO createMovieDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -171,23 +168,5 @@ public class MovieController : Controller
             ? Ok("Movie photo added!")
             : StatusCode(500, "Movie photo not added!");
     }
-
-    //[HttpGet("getPhotos")]
-    //public async Task<IActionResult> GetPhotos(int id)
-    //{
-    //    var photos = await _context.MovieImages
-    //        .Where(p => p.Movie.Any(p => p.Id == id))
-    //        .Select(m => new MovieImageDTO
-    //        {
-    //            FileName = m.FileName,
-    //            Path = m.Path
-    //        })
-    //        .ToListAsync();
-
-    //    if (photos.Count == 0)
-    //        return NotFound();
-
-    //    return Ok(photos);
-    //}
 }
 

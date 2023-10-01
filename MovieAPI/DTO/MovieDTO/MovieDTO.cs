@@ -1,13 +1,11 @@
 ﻿using System.Text.Json.Serialization;
-using MovieAPI.DTO.Director;
+using MovieAPI.DTO.DirectorDTO;
 using MovieAPI.DTO.Platform;
-using MovieAPI.DTO.Player;
 
-namespace MovieAPI.DTO;
+namespace MovieAPI.DTO.MovieDTO;
 
 public class MovieDTO
 {
-
     public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -17,6 +15,6 @@ public class MovieDTO
     public int PlatformId { get; set; }
     public string PlatformName { get; set; }
     public string CategoryName { get; set; }
-    public List<PlayerDTO> Players { get; set; }
-    public List<DirectorDTO> Directors { get; set; }
+    public List<PlayerDTO.PlayerDTO> Players { get; set; }
+    public List<DirectorDTO.DirectorDTO> Directors { get; set; }
 }
