@@ -11,7 +11,7 @@ using MovieAPI.Infrastructure.Data.Entities.MovieImage;
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class MovieController : Controller
+public class MovieController : BaseAPIController
 {
     private readonly MovieAPIDbContext _context;
     private readonly IFileService _fileService;
@@ -101,7 +101,7 @@ public class MovieController : Controller
         await _context.Movies.AddAsync(movie);
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Movie Added")
+            ? OK(200, "Film Eklendi", movie)
             : StatusCode(500, "Movie not added");
     }
 
