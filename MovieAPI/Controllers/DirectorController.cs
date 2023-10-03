@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Numerics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.DTO.DirectorDTO;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Director;
+using MovieAPI.Infrastructure.Data.Entities.Player;
 
 namespace MovieAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class DirectorController : Controller
+    public class DirectorController : BaseAPIController
     {
         private readonly MovieAPIDbContext _context;
 
@@ -35,7 +37,9 @@ namespace MovieAPI.Controllers
 
             await _context.Directors.AddRangeAsync(directors);
 
-            return await _context.SaveChangesAsync() > 0 ? Ok("Directors added!") : StatusCode(500, "Directors not added!");
+            return await _context.SaveChangesAsync() > 0
+                ? OK(200, "Directors added!", directors)
+                : StatusCode(500, "Directors not added!");
         }
 
         [HttpGet("[action]/{movieId}")]
@@ -55,7 +59,7 @@ namespace MovieAPI.Controllers
             .ToListAsync();
 
             return directors is not null
-                ? Ok(directors)
+                ? OK(200, "Director listed by id!", directors)
                 : NotFound("Director Not Found");
         }
 
@@ -74,8 +78,8 @@ namespace MovieAPI.Controllers
             _context.Directors.Remove(director);
 
             return await _context.SaveChangesAsync() > 0
-                 ? Ok("Player Deleted!")
-                 : StatusCode(500, "Player not deleted");
+                                ? OK(200, "Deleted director by id!", director)
+                                : StatusCode(500, "Director not deleted");
         }
     }
 }

@@ -23,7 +23,7 @@ public class MovieController : BaseAPIController
     }
 
     [HttpGet("[action]")]
-    public async Task<ActionResult> GetAll()
+    public async Task<IActionResult> GetAll()
     {
         var movies = await _context.Movies.Select(m => new MovieDTO
         {
@@ -48,12 +48,12 @@ public class MovieController : BaseAPIController
         }).ToListAsync();
 
         return movies is not null
-            ? Ok(movies)
+            ? OK(200,"Movies Listed!",movies)
             : StatusCode(500, "Movies not found");
     }
 
     [HttpGet("[action]/{id}")]
-    public async Task<ActionResult> GetByMovieId(int id)
+    public async Task<IActionResult> GetByMovieId(int id)
     {
         var movie = await _context.Movies.Select(m => new MovieDTO
         {
@@ -78,7 +78,7 @@ public class MovieController : BaseAPIController
 
 
         return movie is not null
-            ? Ok(movie)
+            ? OK(200, "Movie list by id!", movie)
             : NotFound("Movie Id not found!");
     }
 
@@ -101,8 +101,8 @@ public class MovieController : BaseAPIController
         await _context.Movies.AddAsync(movie);
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Film Eklendi", movie)
-            : StatusCode(500, "Movie not added");
+            ? OK(200, "Movie Added!", movie)
+            : StatusCode(500, "Movie not added!");
     }
 
 
@@ -122,13 +122,13 @@ public class MovieController : BaseAPIController
         existingMovies.MovieTime = updatedMovie.MovieTime;
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Movie Updated!")
+            ? OK(200,"Movie Updated!", existingMovies)
             : StatusCode(500, "Movie not Updated!");
     }
 
 
     [HttpDelete("[action]/{id}")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var movie = await _context.Movies.FindAsync(id);
 
@@ -138,7 +138,7 @@ public class MovieController : BaseAPIController
         _context.Movies.Remove(movie);
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Movie Deleted!")
+            ? OK(200,"Movie Deleted!",movie)
             : StatusCode(500, "Movie not deleted");
     }
 
@@ -165,7 +165,7 @@ public class MovieController : BaseAPIController
         }).ToList());
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Movie photo added!")
+            ? OK(200,"Movie photo added!",movie)
             : StatusCode(500, "Movie photo not added!");
     }
 }

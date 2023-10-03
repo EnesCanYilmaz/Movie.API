@@ -7,7 +7,7 @@ using MovieAPI.Infrastructure.Data.Entities.Player;
 namespace MovieAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class PlayersController : Controller
+    public class PlayersController : BaseAPIController
     {
         private readonly MovieAPIDbContext _context;
 
@@ -35,7 +35,9 @@ namespace MovieAPI.Controllers
 
             await _context.Players.AddRangeAsync(players);
 
-            return await _context.SaveChangesAsync() > 0 ? Ok("Players added!") : StatusCode(500, "Players not added!");
+            return await _context.SaveChangesAsync() > 0
+            ? OK(200, "Players added!", players)
+                : StatusCode(500, "Players not added!");
         }
 
         [HttpGet("[action]/{movieId}")]
@@ -45,7 +47,7 @@ namespace MovieAPI.Controllers
                 return BadRequest();
 
             var players = await _context.Players
-                .Where(p => p.MovieId == movieId) 
+                .Where(p => p.MovieId == movieId)
                 .Select(p => new ListPlayerDTO
                 {
                     Id = p.Id,
@@ -55,8 +57,8 @@ namespace MovieAPI.Controllers
             .ToListAsync();
 
             return players is not null
-                ? Ok(players)
-                : NotFound("Player Not Found");
+            ? OK(200, "Player listed by id!", players)
+            : NotFound("Player Not Found");
         }
 
         [HttpGet("[action]/{id}")]
@@ -74,8 +76,8 @@ namespace MovieAPI.Controllers
             _context.Players.Remove(player);
 
             return await _context.SaveChangesAsync() > 0
-                 ? Ok("Player Deleted!")
-                 : StatusCode(500, "Player not deleted");
+                ? OK(200, "Deleted player by id!", player)
+                : StatusCode(500, "Player not deleted");
         }
     }
 }

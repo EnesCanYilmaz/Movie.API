@@ -9,7 +9,7 @@ using MovieAPI.Infrastructure.Data.Entities.Category;
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class CategoryController : Controller
+public class CategoryController : BaseAPIController
 {
     private readonly MovieAPIDbContext _context;
 
@@ -28,7 +28,7 @@ public class CategoryController : Controller
         }).ToListAsync();
 
         return categories is not null
-            ? Ok(categories)
+            ? OK(200, "All categories listed!", categories)
             : NotFound("Categories not found!");
     }
 
@@ -54,7 +54,7 @@ public class CategoryController : Controller
         }).FirstOrDefaultAsync(c => c.Id == id);
 
         return category is not null
-            ? Ok(category)
+            ? OK(200, "Category listed by id!", category)
             : NotFound("Category Id not found!");
     }
 
@@ -73,12 +73,12 @@ public class CategoryController : Controller
         await _context.Categories.AddAsync(category);
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Category Added")
+            ? OK(200, "Category added!", category)
             : StatusCode(500, "Category not Added");
     }
 
     [HttpPut("[action]/{id}")]
-    public async Task<ActionResult> UpdateCategory(int id, string categoryName)
+    public async Task<IActionResult> UpdateCategory(int id, string categoryName)
     {
         var existingCategory = await _context.Categories.FindAsync(id);
 
@@ -91,7 +91,7 @@ public class CategoryController : Controller
         existingCategory.Name = categoryName;
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Category Updated!")
+            ? OK(200, "Category updated!", existingCategory)
             : StatusCode(500, "Category not Updated!");
     }
 
@@ -107,7 +107,7 @@ public class CategoryController : Controller
         _context.Categories.Remove(category);
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Category Deleted")
+            ? OK(200, "Category deleted by id!", category)
             : StatusCode(500, "Category not Deleted");
     }
 }

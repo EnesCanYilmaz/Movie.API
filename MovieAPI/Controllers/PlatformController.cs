@@ -4,12 +4,13 @@ using MovieAPI.DTO;
 using MovieAPI.DTO.MovieDTO;
 using MovieAPI.DTO.Platform;
 using MovieAPI.Infrastructure.Data.Context;
+using MovieAPI.Infrastructure.Data.Entities.Category;
 using MovieAPI.Infrastructure.Data.Entities.Platform;
 
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class PlatformController : Controller
+public class PlatformController : BaseAPIController
 { 
     private readonly MovieAPIDbContext _context;
 
@@ -28,7 +29,7 @@ public class PlatformController : Controller
         }).ToListAsync();
 
         return platforms is not null
-            ? Ok(platforms)
+            ? OK(200, "All platforms listed!", platforms)
             : NotFound("Platforms not found!");
     }
 
@@ -52,10 +53,8 @@ public class PlatformController : Controller
                 MovieTime = m.MovieTime
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
-
-
         return platform is not null
-         ? Ok(platform)
+            ? OK(200, "Platform listed by id!", platform)
          : NotFound("Platform Id not found!");
     }
 
@@ -74,12 +73,12 @@ public class PlatformController : Controller
         await _context.Platforms.AddAsync(platform);
 
         return await _context.SaveChangesAsync() > 0
-            ? StatusCode(200, "Platform Added")
+            ? OK(200, "Category added!", platform)
             : StatusCode(500, "Platform not Added!");
     }
 
     [HttpPut("[action]/{id}")]
-    public async Task<ActionResult> UpdatePlatform(int id, string platformName)
+    public async Task<IActionResult> UpdatePlatform(int id, string platformName)
     {
         var existingPlatform = await _context.Platforms.FindAsync(id);
 
@@ -93,8 +92,8 @@ public class PlatformController : Controller
         existingPlatform.UpdatedDate = DateTime.Now;
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok(existingPlatform)
-            : NotFound("Category not Updated!");
+            ? OK(200, "Platform updated!", existingPlatform)
+            : NotFound("Platform not Updated!");
     }
 
 
@@ -109,7 +108,7 @@ public class PlatformController : Controller
         _context.Platforms.Remove(platform);
 
         return await _context.SaveChangesAsync() > 0
-            ? Ok("Platform Deleted!")
-            : StatusCode(500, "Platforn not Deleted");
+            ? OK(200, "Platform deleted by id!", platform)
+            : StatusCode(500, "Platform not Deleted");
     }
 }
