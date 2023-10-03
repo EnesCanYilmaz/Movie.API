@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 using MovieAPI.FileRename;
 using MovieAPI.Infrastructure.Data;
 
@@ -14,6 +16,12 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod()
 ));
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 
 var app = builder.Build();
 
