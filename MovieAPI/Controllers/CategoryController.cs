@@ -96,7 +96,7 @@ public class CategoryController : BaseAPIController
     }
 
 
-    [HttpDelete("[action]{id}")]
+    [HttpDelete("[action]/{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
