@@ -61,7 +61,7 @@ namespace MovieAPI.Controllers
             : NotFound("Player Not Found");
         }
 
-        [HttpGet("[action]/{id}")]
+        [HttpDelete("[action]/{id}")]
         public async Task<IActionResult> DeletePlayer(int id)
         {
             if (!ModelState.IsValid)

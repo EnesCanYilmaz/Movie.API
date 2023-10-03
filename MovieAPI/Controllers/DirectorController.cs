@@ -63,7 +63,7 @@ namespace MovieAPI.Controllers
                 : NotFound("Director Not Found");
         }
 
-        [HttpGet("[action]/{id}")]
+        [HttpDelete("[action]/{id}")]
         public async Task<IActionResult> DeleteDirector(int id)
         {
             if (!ModelState.IsValid)
