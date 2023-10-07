@@ -43,6 +43,8 @@
     <None Remove="DTO\DirectorDTO\" />
     <None Remove="DTO\MovieImageDTO\" />
     <None Remove="DTO\PlayerDTO\" />
+    <None Remove="Services\User\" />
+    <None Remove="DTO\User\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Infrastructure\" />
@@ -56,11 +58,11 @@
     <Folder Include="wwwroot\" />
     <Folder Include="Services\File\" />
     <Folder Include="Infrastructure\Data\Entities\Director\" />
-    <Folder Include="DTO\MovieDTO\" />
-    <Folder Include="DTO\CategoryDTO\" />
-    <Folder Include="DTO\DirectorDTO\" />
-    <Folder Include="DTO\MovieImageDTO\" />
-    <Folder Include="DTO\PlayerDTO\" />
+    <Folder Include="DTO\Movie\" />
+    <Folder Include="DTO\Category\" />
+    <Folder Include="DTO\Director\" />
+    <Folder Include="DTO\MovieImage\" />
+    <Folder Include="DTO\Player\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20230930223133_mig_1.Designer.cs" />

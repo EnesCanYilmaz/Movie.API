@@ -88,7 +88,7 @@ public class PlatformController : BaseAPIController
         if (string.IsNullOrWhiteSpace(name))
             return BadRequest("Platform Name cannot be empty.");
 
-        existingPlatform.Name = platformName;
+        existingPlatform.Name = name;
         existingPlatform.UpdatedDate = DateTime.Now;
 
         return await _context.SaveChangesAsync() > 0

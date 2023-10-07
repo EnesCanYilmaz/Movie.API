@@ -171,5 +171,20 @@ public class MovieController : BaseAPIController
             ? OK(200, "Movie photo added!", movie)
             : StatusCode(500, "Movie photo not added!");
     }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetMoviePhotos(int id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+        
+        var moviePhotos = await _context.Movies
+            .Include(m => m.MovieImages)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        return moviePhotos is not null
+            ? OK(200, "Movie Photos list by id!", moviePhotos)
+            : StatusCode(500,"Movie Photos not found!");
+    }
 }
 
