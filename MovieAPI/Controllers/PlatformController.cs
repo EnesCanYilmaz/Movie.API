@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.DTO;
+using MovieAPI.DTO.Movie;
 using MovieAPI.DTO.MovieDTO;
 using MovieAPI.DTO.Platform;
 using MovieAPI.Infrastructure.Data.Context;

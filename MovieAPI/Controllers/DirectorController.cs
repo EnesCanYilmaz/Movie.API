@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieAPI.DTO.DirectorDTO;
+using MovieAPI.DTO.Director;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Director;
 using MovieAPI.Infrastructure.Data.Entities.Player;

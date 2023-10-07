@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieAPI.DTO.DirectorDTO;
+using MovieAPI.DTO.Director;
+using MovieAPI.DTO.Movie;
 using MovieAPI.DTO.MovieDTO;
-using MovieAPI.DTO.PlayerDTO;
+using MovieAPI.DTO.Player;
 using MovieAPI.FileRename;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Movie;

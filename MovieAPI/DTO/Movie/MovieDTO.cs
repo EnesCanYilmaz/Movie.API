@@ -15,7 +15,7 @@ public class MovieDTO
     public int PlatformId { get; set; }
     public string PlatformName { get; set; }
     public string CategoryName { get; set; }
-    public List<PlayerDTO.PlayerDTO> Players { get; set; }
-    public List<DirectorDTO.DirectorDTO> Directors { get; set; }
-    public List<MovieImageDTO.MovieImageDTO> MovieImages { get; set; }
+    public List<Player.PlayerDTO> Players { get; set; }
+    public List<Director.DirectorDTO> Directors { get; set; }
+    public List<MovieImage.MovieImageDTO> MovieImages { get; set; }
 }
