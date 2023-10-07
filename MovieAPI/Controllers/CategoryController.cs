@@ -76,14 +76,14 @@ public class CategoryController : BaseAPIController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateCategory(string name)
+    public async Task<IActionResult> CreateCategory(CreateCategoryDTO createCategoryDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
 
         var category = new Category
         {
-            Name = name,
+            Name = createCategoryDTO.Name,
             CreatedDate = DateTime.Now
         };
 
