@@ -59,14 +59,14 @@ public class PlatformController : BaseAPIController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreatePlatform(string platformName)
+    public async Task<IActionResult> CreatePlatform(string name)
     {
         if (!ModelState.IsValid)
             return BadRequest();
 
         var platform = new Platform
         {
-            Name = platformName,
+            Name = name,
             CreatedDate = DateTime.Now
         };
 
@@ -78,14 +78,14 @@ public class PlatformController : BaseAPIController
     }
 
     [HttpPut("[action]/{id}")]
-    public async Task<IActionResult> UpdatePlatform(int id, string platformName)
+    public async Task<IActionResult> UpdatePlatform(int id, string name)
     {
         var existingPlatform = await _context.Platforms.FindAsync(id);
 
         if (existingPlatform is null)
             return NotFound("Platform not found!");
 
-        if (string.IsNullOrWhiteSpace(platformName))
+        if (string.IsNullOrWhiteSpace(name))
             return BadRequest("Platform Name cannot be empty.");
 
         existingPlatform.Name = platformName;

@@ -17,4 +17,5 @@ public class MovieDTO
     public string CategoryName { get; set; }
     public List<PlayerDTO.PlayerDTO> Players { get; set; }
     public List<DirectorDTO.DirectorDTO> Directors { get; set; }
+    public List<MovieImageDTO.MovieImageDTO> MovieImages { get; set; }
 }

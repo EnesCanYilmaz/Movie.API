@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieAPI.DTO;
 using MovieAPI.DTO.Category;
+using MovieAPI.DTO.CategoryDTO;
+using MovieAPI.DTO.DirectorDTO;
 using MovieAPI.DTO.MovieDTO;
+using MovieAPI.DTO.MovieImageDTO;
+using MovieAPI.DTO.PlayerDTO;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Category;
 
@@ -21,7 +24,7 @@ public class CategoryController : BaseAPIController
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAllCategories()
     {
-        var categories = await _context.Categories.Select(c => new CategoryDTO
+        var categories = await _context.Categories.Select(c => new GetAllCategoryDTO
         {
             Id = c.Id,
             Name = c.Name,
@@ -49,7 +52,21 @@ public class CategoryController : BaseAPIController
                 PlatformId = m.Platform.Id,
                 PlatformName = m.Platform.Name,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
-                MovieTime = m.MovieTime
+                MovieTime = m.MovieTime,
+                Players = m.Players.Select(p => new PlayerDTO
+                {
+                    Name = p.Name
+                }).ToList(),
+                Directors = m.Directors.Select(d => new DirectorDTO
+                {
+                    Id = d.Id,
+                    Name = d.Name
+                }).ToList(),
+                MovieImages = m.MovieImages.Select(i => new MovieImageDTO
+                {
+                    FileName = i.FileName,
+                    Path = i.Path
+                }).ToList()
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
 
@@ -59,36 +76,43 @@ public class CategoryController : BaseAPIController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateCategory(string categoryName)
+    public async Task<IActionResult> CreateCategory(string name)
     {
         if (!ModelState.IsValid)
             return BadRequest();
 
         var category = new Category
         {
-            Name = categoryName,
+            Name = name,
             CreatedDate = DateTime.Now
         };
 
         await _context.Categories.AddAsync(category);
 
+        var categoryDto = new CreateCategoryDTO
+        {
+            Name = category.Name,
+            CreatedDate = category.CreatedDate
+        };
+
         return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Category added!", category)
+            ? OK(200, "Category added!", categoryDto)
             : StatusCode(500, "Category not Added");
     }
 
     [HttpPut("[action]/{id}")]
-    public async Task<IActionResult> UpdateCategory(int id, string categoryName)
+    public async Task<IActionResult> UpdateCategory(int id, string name)
     {
         var existingCategory = await _context.Categories.FindAsync(id);
 
         if (existingCategory is null)
             return NotFound("Category not found!");
 
-        if (string.IsNullOrWhiteSpace(categoryName))
+        if (string.IsNullOrWhiteSpace(name))
             return BadRequest("Category name cannot be empty!");
 
-        existingCategory.Name = categoryName;
+        existingCategory.Name = name;
+        existingCategory.UpdatedDate = DateTime.UtcNow;
 
         return await _context.SaveChangesAsync() > 0
             ? OK(200, "Category updated!", existingCategory)

@@ -48,7 +48,7 @@ public class MovieController : BaseAPIController
         }).ToListAsync();
 
         return movies is not null
-            ? OK(200,"Movies Listed!",movies)
+            ? OK(200, "Movies Listed!", movies)
             : StatusCode(500, "Movies not found");
     }
 
@@ -109,6 +109,9 @@ public class MovieController : BaseAPIController
     [HttpPut("[action]/{id}")]
     public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieDTO updatedMovie)
     {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
         var existingMovies = await _context.Movies.FindAsync(id);
 
         if (existingMovies is null)
@@ -122,7 +125,7 @@ public class MovieController : BaseAPIController
         existingMovies.MovieTime = updatedMovie.MovieTime;
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200,"Movie Updated!", existingMovies)
+            ? OK(200, "Movie Updated!", existingMovies)
             : StatusCode(500, "Movie not Updated!");
     }
 
@@ -138,11 +141,11 @@ public class MovieController : BaseAPIController
         _context.Movies.Remove(movie);
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200,"Movie Deleted!",movie)
+            ? OK(200, "Movie Deleted!", movie)
             : StatusCode(500, "Movie not deleted");
     }
 
-    [HttpPost("[action]")]
+    [HttpPost("[action]/{id}")]
     public async Task<IActionResult> UploadPhoto(int id, IFormFileCollection? files)
     {
 
@@ -165,7 +168,7 @@ public class MovieController : BaseAPIController
         }).ToList());
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200,"Movie photo added!",movie)
+            ? OK(200, "Movie photo added!", movie)
             : StatusCode(500, "Movie photo not added!");
     }
 }
