@@ -76,7 +76,7 @@ public class CategoryController : BaseAPIController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateCategory(CreateCategoryDTO createCategoryDTO)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDTO createCategoryDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
