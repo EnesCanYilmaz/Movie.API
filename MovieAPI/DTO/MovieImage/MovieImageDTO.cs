@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MovieAPI.DTO.MovieImageDTO
+namespace MovieAPI.DTO.MovieImage
 {
 	public class MovieImageDTO
 	{

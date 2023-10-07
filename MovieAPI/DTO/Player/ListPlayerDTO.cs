@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MovieAPI.DTO.PlayerDTO
+namespace MovieAPI.DTO.Player
 {
 	public class ListPlayerDTO
 	{

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MovieAPI.DTO.CategoryDTO
+namespace MovieAPI.DTO.Category
 {
     public class UpdateCategoryDTO
     {
