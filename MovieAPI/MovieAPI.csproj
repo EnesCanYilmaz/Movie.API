@@ -62,9 +62,13 @@
     <Folder Include="DTO\Director\" />
     <Folder Include="DTO\MovieImage\" />
     <Folder Include="DTO\Player\" />
+    <Folder Include="wwwroot\photo\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20230930223133_mig_1.Designer.cs" />
     <Compile Remove="Migrations\20230930231347_mig_2.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\photo\" />
   </ItemGroup>
 </Project>

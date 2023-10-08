@@ -146,7 +146,7 @@ public class PlatformController : BaseAPIController
         _context.Platforms.Remove(platform);
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Platform deleted by id!", "All movies, actors, directors related to the platform have been deleted!")
+            ? OK(200, "Platform deleted by id!", "All movies, actors, directors, photos related to the platform have been deleted!")
             : StatusCode(500, "Platform not Deleted");
     }
 }

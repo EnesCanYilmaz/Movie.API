@@ -1,23 +1,18 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using static MovieAPI.DTO.ResponseModelDTO;
+﻿namespace MovieAPI.Controllers;
 
-namespace MovieAPI.Controllers
+public class BaseAPIController : Controller
 {
-    public class BaseAPIController : Controller
+    [NonAction]
+    public IActionResult OK(int statusCode, string statusMessage, object? result)
     {
-        [NonAction]
-        public IActionResult OK(int statusCode, string statusMessage, object? result)
+        ResponseModel<object> responseModel = new()
         {
-            ResponseModel<object> responseModel = new()
-            {
-                StatusCode = statusCode,
-                StatusMessage = statusMessage,
-                Result = result
-            };
+            StatusCode = statusCode,
+            StatusMessage = statusMessage,
+            Result = result
+        };
 
-            return Ok(responseModel);
-        }
+        return Ok(responseModel);
     }
 }
 

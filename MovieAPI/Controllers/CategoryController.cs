@@ -140,7 +140,7 @@ public class CategoryController : BaseAPIController
         _context.Categories.Remove(category);
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Category deleted by id!", "All movies, actors, directors related to the category have been deleted")
+            ? OK(200, "Category deleted by id!", "All movies, actors, directors, photos related to the category have been deleted")
             : StatusCode(500, "Category not deleted");
     }
 }

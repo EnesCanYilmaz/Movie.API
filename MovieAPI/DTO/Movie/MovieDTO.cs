@@ -1,8 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using MovieAPI.DTO.Director;
-using MovieAPI.DTO.Platform;
-
-namespace MovieAPI.DTO.Movie;
+﻿namespace MovieAPI.DTO.Movie;
 
 public class MovieDTO
 {

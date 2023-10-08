@@ -1,12 +1,11 @@
-﻿namespace MovieAPI.DTO.MovieDTO
+﻿namespace MovieAPI.DTO.Movie;
+
+public class CreateMovieDTO
 {
-	public class CreateMovieDTO
-	{
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ReleaseDate { get; set; }
-        public string MovieTime { get; set; }
-        public int CategoryId { get; set; }
-        public int PlatformId { get; set; }
-    }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public DateTime ReleaseDate { get; set; }
+    public string MovieTime { get; set; }
+    public int CategoryId { get; set; }
+    public int PlatformId { get; set; }
 }
