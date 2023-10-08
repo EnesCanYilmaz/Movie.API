@@ -46,9 +46,7 @@ public class PlatformController : BaseAPIController
                 Id = m.Id,
                 Name = m.Name,
                 Description = m.Description,
-                CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
-                PlatformId = m.Platform.Id,
                 PlatformName = m.Platform.Name,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
                 MovieTime = m.MovieTime

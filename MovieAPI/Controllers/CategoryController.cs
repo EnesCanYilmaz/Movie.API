@@ -1,15 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MovieAPI.DTO.Category;
-using MovieAPI.DTO.Director;
-using MovieAPI.DTO.Movie;
-using MovieAPI.DTO.MovieDTO;
-using MovieAPI.DTO.MovieImage;
-using MovieAPI.DTO.Player;
-using MovieAPI.Infrastructure.Data.Context;
-using MovieAPI.Infrastructure.Data.Entities.Category;
-
-namespace MovieAPI.Controllers;
+﻿namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 public class CategoryController : BaseAPIController
@@ -28,6 +17,8 @@ public class CategoryController : BaseAPIController
         {
             Id = c.Id,
             Name = c.Name,
+            CreatedDate = c.CreatedDate,
+            UpdatedDate = c.UpdatedDate != null ? c.UpdatedDate : Convert.ToDateTime(c.UpdatedDate)
         }).ToListAsync();
 
         return categories is not null
@@ -42,14 +33,14 @@ public class CategoryController : BaseAPIController
         {
             Id = c.Id,
             Name = c.Name,
+            CreatedDate = c.CreatedDate,
+            UpdatedDate = c.UpdatedDate != null ? c.UpdatedDate : Convert.ToDateTime(c.UpdatedDate),
             Movies = c.Movies.Select(m => new MovieDTO
             {
                 Id = m.Id,
                 Name = m.Name,
                 Description = m.Description,
-                CategoryId = m.Category.Id,
                 CategoryName = m.Category.Name,
-                PlatformId = m.Platform.Id,
                 PlatformName = m.Platform.Name,
                 ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
                 MovieTime = m.MovieTime,
@@ -59,7 +50,6 @@ public class CategoryController : BaseAPIController
                 }).ToList(),
                 Directors = m.Directors.Select(d => new DirectorDTO
                 {
-                    Id = d.Id,
                     Name = d.Name
                 }).ToList(),
                 MovieImages = m.MovieImages.Select(i => new MovieImageDTO
@@ -71,67 +61,86 @@ public class CategoryController : BaseAPIController
         }).FirstOrDefaultAsync(c => c.Id == id);
 
         return category is not null
-            ? OK(200, "Category listed by id!", category)
-            : NotFound("Category Id not found!");
+            ? OK(200, "Category listed!", category)
+            : NotFound("Category not found!");
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDTO createCategoryDTO)
+    public async Task<IActionResult> CreateCategory(string categoryName)
     {
         if (!ModelState.IsValid)
             return BadRequest();
 
         var category = new Category
         {
-            Name = createCategoryDTO.Name,
-            CreatedDate = DateTime.Now
+            Name = categoryName,
+            CreatedDate = DateTime.UtcNow
         };
 
         await _context.Categories.AddAsync(category);
 
+        var addedCategoryResult = await _context.SaveChangesAsync();
+
         var categoryDto = new CreateCategoryDTO
         {
+            Id = category.Id,
             Name = category.Name,
             CreatedDate = category.CreatedDate
         };
 
-        return await _context.SaveChangesAsync() > 0
+        return addedCategoryResult > 0
             ? OK(200, "Category added!", categoryDto)
-            : StatusCode(500, "Category not Added");
+            : StatusCode(500, "Category not added!");
     }
 
-    [HttpPut("[action]/{id}")]
-    public async Task<IActionResult> UpdateCategory(int id, string name)
+    [HttpPut("[action]")]
+    public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDTO updateCategoryDTO)
     {
-        var existingCategory = await _context.Categories.FindAsync(id);
+        if (!ModelState.IsValid)
+            return BadRequest();
+
+        var existingCategory = await _context.Categories.FindAsync(updateCategoryDTO.Id);
 
         if (existingCategory is null)
             return NotFound("Category not found!");
 
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(updateCategoryDTO.Name))
             return BadRequest("Category name cannot be empty!");
 
-        existingCategory.Name = name;
+        existingCategory.Name = updateCategoryDTO.Name;
         existingCategory.UpdatedDate = DateTime.UtcNow;
 
-        return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Category updated!", existingCategory)
-            : StatusCode(500, "Category not Updated!");
-    }
 
+        var updatedCategoryResult = await _context.SaveChangesAsync();
+
+        var listCategoryDTO = new ListCategoryDTO
+        {
+            Id = existingCategory.Id,
+            Name = existingCategory.Name,
+            CreatedDate = existingCategory.CreatedDate,
+            UpdatedDate = existingCategory.UpdatedDate
+        };
+
+        return updatedCategoryResult > 0
+            ? OK(200, "Category updated!", listCategoryDTO)
+            : StatusCode(500, "Category not updated!");
+    }
 
     [HttpDelete("[action]/{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
         var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
         if (category is null)
-            return NotFound("Category Not Found!");
+            return NotFound("Category not found!");
 
         _context.Categories.Remove(category);
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Category deleted by id!", category)
-            : StatusCode(500, "Category not Deleted");
+            ? OK(200, "Category deleted by id!", "All movies, actors, directors related to the category have been deleted")
+            : StatusCode(500, "Category not deleted");
     }
 }

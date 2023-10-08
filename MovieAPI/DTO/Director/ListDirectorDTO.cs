@@ -1,5 +1,4 @@
-﻿using System;
-namespace MovieAPI.DTO.Director
+﻿namespace MovieAPI.DTO.Director
 {
 	public class ListDirectorDTO
 	{

@@ -4,10 +4,10 @@ using static MovieAPI.DTO.ResponseModelDTO;
 
 namespace MovieAPI.Controllers
 {
-	public class BaseAPIController : Controller
-	{
+    public class BaseAPIController : Controller
+    {
         [NonAction]
-        public IActionResult OK( int statusCode,string statusMessage,object result)
+        public IActionResult OK(int statusCode, string statusMessage, object? result)
         {
             ResponseModel<object> responseModel = new()
             {

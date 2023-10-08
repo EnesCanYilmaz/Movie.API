@@ -31,9 +31,7 @@ public class MovieController : BaseAPIController
             Id = m.Id,
             Name = m.Name,
             Description = m.Description,
-            CategoryId = m.CategoryId,
             CategoryName = m.Category.Name,
-            PlatformId = m.PlatformId,
             PlatformName = m.Platform.Name,
             ReleaseDate = m.ReleaseDate.ToString("dd/MM/yyyy"),
             MovieTime = m.MovieTime,
@@ -43,7 +41,6 @@ public class MovieController : BaseAPIController
             }).ToList(),
             Directors = m.Directors.Select(p => new DirectorDTO
             {
-                Id = p.Id,
                 Name = p.Name
             }).ToList()
         }).ToListAsync();
@@ -61,9 +58,7 @@ public class MovieController : BaseAPIController
             Id = m.Id,
             Name = m.Name,
             Description = m.Description,
-            CategoryId = m.Category.Id,
             CategoryName = m.Category.Name,
-            PlatformId = m.Platform.Id,
             PlatformName = m.Platform.Name,
             ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
             MovieTime = m.MovieTime,
@@ -108,12 +103,12 @@ public class MovieController : BaseAPIController
 
 
     [HttpPut("[action]/{id}")]
-    public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieDTO updatedMovie)
+    public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDTO updatedMovie)
     {
         if (!ModelState.IsValid)
             return BadRequest();
 
-        var existingMovies = await _context.Movies.FindAsync(id);
+        var existingMovies = await _context.Movies.FindAsync(updatedMovie.Id);
 
         if (existingMovies is null)
             return NotFound("Movie not found!");
