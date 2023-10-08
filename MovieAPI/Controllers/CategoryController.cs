@@ -13,7 +13,7 @@ public class CategoryController : BaseAPIController
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAllCategories()
     {
-        var categories = await _context.Categories.Select(c => new GetAllCategoryDTO
+        var categories = await _context.Categories.Select(c => new ListCategoryDTO
         {
             Id = c.Id,
             Name = c.Name,
