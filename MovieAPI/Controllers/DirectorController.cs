@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieAPI.DTO.Director;
+using MovieAPI.DTO.Player;
 using MovieAPI.Infrastructure.Data.Context;
 using MovieAPI.Infrastructure.Data.Entities.Director;
 using MovieAPI.Infrastructure.Data.Entities.Player;
@@ -19,17 +20,17 @@ namespace MovieAPI.Controllers
         }
 
         [HttpPost("[action]/{id}")]
-        public async Task<IActionResult> CreateDirectors(int id, List<string> directorNames)
+        public async Task<IActionResult> CreateDirectors(CreateDirectorDTO createDirectorDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies.FindAsync(createDirectorDTO.Id);
 
             if (movie is null)
                 return NotFound("Movie not found!");
 
-            var directors = directorNames.Select(request => new Director
+            var directors = createDirectorDTO.DirectorNames.Select(request => new Director
             {
                 MovieId = movie.Id,
                 Name = request
@@ -37,8 +38,19 @@ namespace MovieAPI.Controllers
 
             await _context.Directors.AddRangeAsync(directors);
 
-            return await _context.SaveChangesAsync() > 0
-                ? OK(200, "Directors added!", directors)
+            var directorAddedResult = await _context.SaveChangesAsync();
+
+            var directorDto = await _context.Directors.Where(x => x.MovieId == createDirectorDTO.Id).Select(x => new ListDirectorDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                MovieId = x.MovieId,
+                CreatedDate = x.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+                UpdatedDate = x.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
+            }).ToListAsync();
+
+            return directorAddedResult > 0
+                ? OK(200, "Directors added!", directorDto)
                 : StatusCode(500, "Directors not added!");
         }
 
@@ -58,8 +70,17 @@ namespace MovieAPI.Controllers
                 })
             .ToListAsync();
 
+            var directorDto = await _context.Directors.Where(x => x.MovieId == movieId).Select(x => new ListDirectorDTO
+            {
+                Id = x.Id,
+                Name = x.Name,
+                MovieId = x.MovieId,
+                CreatedDate = x.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+                UpdatedDate = x.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
+            }).ToListAsync();
+
             return directors is not null
-                ? OK(200, "Director listed by id!", directors)
+                ? OK(200, "Director listed by id!", directorDto)
                 : NotFound("Director Not Found");
         }
 
@@ -78,7 +99,7 @@ namespace MovieAPI.Controllers
             _context.Directors.Remove(director);
 
             return await _context.SaveChangesAsync() > 0
-                                ? OK(200, "Deleted director by id!", director)
+                                ? OK(200, "Deleted!", "Director deleted!")
                                 : StatusCode(500, "Director not deleted");
         }
     }

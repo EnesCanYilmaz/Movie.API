@@ -17,8 +17,8 @@ public class CategoryController : BaseAPIController
         {
             Id = c.Id,
             Name = c.Name,
-            CreatedDate = c.CreatedDate,
-            UpdatedDate = c.UpdatedDate != null ? c.UpdatedDate : Convert.ToDateTime(c.UpdatedDate)
+            CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm") 
         }).ToListAsync();
 
         return categories is not null
@@ -33,8 +33,8 @@ public class CategoryController : BaseAPIController
         {
             Id = c.Id,
             Name = c.Name,
-            CreatedDate = c.CreatedDate,
-            UpdatedDate = c.UpdatedDate != null ? c.UpdatedDate : Convert.ToDateTime(c.UpdatedDate),
+            CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm"), 
             Movies = c.Movies.Select(m => new MovieDTO
             {
                 Id = m.Id,
@@ -42,21 +42,27 @@ public class CategoryController : BaseAPIController
                 Description = m.Description,
                 CategoryName = m.Category.Name,
                 PlatformName = m.Platform.Name,
-                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
+                ReleaseDate = m.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
                 MovieTime = m.MovieTime,
+                CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+                UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
                 Players = m.Players.Select(p => new PlayerDTO
                 {
+                    Id = p.Id,
                     Name = p.Name
                 }).ToList(),
                 Directors = m.Directors.Select(d => new DirectorDTO
                 {
+                    Id = d.Id,
                     Name = d.Name
                 }).ToList(),
                 MovieImages = m.MovieImages.Select(i => new MovieImageDTO
                 {
+                    Id = i.Id,
                     FileName = i.FileName,
                     Path = i.Path
-                }).ToList()
+                }).ToList(),
+            
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
 
@@ -85,7 +91,7 @@ public class CategoryController : BaseAPIController
         {
             Id = category.Id,
             Name = category.Name,
-            CreatedDate = category.CreatedDate
+            CreatedDate = category.CreatedDate.ToString("dd.MM.yyyy HH:mm")
         };
 
         return addedCategoryResult > 0
@@ -117,8 +123,8 @@ public class CategoryController : BaseAPIController
         {
             Id = existingCategory.Id,
             Name = existingCategory.Name,
-            CreatedDate = existingCategory.CreatedDate,
-            UpdatedDate = existingCategory.UpdatedDate
+            CreatedDate = existingCategory.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = existingCategory.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
         };
 
         return updatedCategoryResult > 0
@@ -140,7 +146,7 @@ public class CategoryController : BaseAPIController
         _context.Categories.Remove(category);
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Category deleted by id!", "All movies, actors, directors, photos related to the category have been deleted")
+            ? OK(200, "Category deleted by id!", "All movies, actors, directors, photos related to the category have been deleted!")
             : StatusCode(500, "Category not deleted");
     }
 }

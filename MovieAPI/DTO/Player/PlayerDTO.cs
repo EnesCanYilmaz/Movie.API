@@ -1,9 +1,8 @@
-﻿using System;
-namespace MovieAPI.DTO.Player
+﻿namespace MovieAPI.DTO.Player;
+
+public class PlayerDTO
 {
-	public class PlayerDTO
-	{
-        public string Name { get; set; } 
-    }
+    public int Id { get; set; }
+    public string Name { get; set; }
 }
 

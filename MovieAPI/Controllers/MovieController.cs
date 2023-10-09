@@ -3,6 +3,7 @@ using MovieAPI.DTO.MovieImage;
 using MovieAPI.Infrastructure.Data.Entities.Category;
 using MovieAPI.Infrastructure.Data.Entities.Movie;
 using MovieAPI.Infrastructure.Data.Entities.Platform;
+using MovieAPI.Infrastructure.Data.Entities.Player;
 
 namespace MovieAPI.Controllers;
 
@@ -28,18 +29,23 @@ public class MovieController : BaseAPIController
             Description = m.Description,
             CategoryName = m.Category.Name,
             PlatformName = m.Platform.Name,
-            ReleaseDate = m.ReleaseDate.ToString("dd/MM/yyyy"),
             MovieTime = m.MovieTime,
+            ReleaseDate = m.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
+            CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
             Players = m.Players.Select(p => new PlayerDTO
             {
+                Id = p.Id,
                 Name = p.Name
             }).ToList(),
             Directors = m.Directors.Select(d => new DirectorDTO
             {
+                Id = d.Id,
                 Name = d.Name
             }).ToList(),
             MovieImages = m.MovieImages.Select(i => new MovieImageDTO
             {
+                Id = i.Id,
                 FileName = i.FileName,
                 Path = i.Path
             }).ToList()
@@ -60,18 +66,23 @@ public class MovieController : BaseAPIController
             Description = m.Description,
             CategoryName = m.Category.Name,
             PlatformName = m.Platform.Name,
-            ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
+            ReleaseDate = m.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
+            CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
             MovieTime = m.MovieTime,
             Directors = m.Directors.Select(d => new DirectorDTO
             {
+                Id = d.Id,
                 Name = d.Name
             }).ToList(),
             Players = m.Players.Select(p => new PlayerDTO
             {
+                Id = p.Id,
                 Name = p.Name
             }).ToList(),
             MovieImages = m.MovieImages.Select(i => new MovieImageDTO
             {
+                Id = i.Id,
                 FileName = i.FileName,
                 Path = i.Path
             }).ToList()
@@ -109,7 +120,7 @@ public class MovieController : BaseAPIController
 
         var addedMovieResult = await _context.SaveChangesAsync();
 
-        var movieDTO = new ListMovieDTO
+        var movieDTO = new CreatedMovieListDTO
         {
             Id = movie.Id,
             Name = movie.Name,
@@ -117,7 +128,8 @@ public class MovieController : BaseAPIController
             PlatformName = platform.Name,
             CategoryName = category.Name,
             MovieTime = movie.MovieTime,
-            ReleaseDate = Convert.ToDateTime(movie.ReleaseDate),
+            ReleaseDate = movie.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
+            CreatedDate = movie.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
         };
 
         return addedMovieResult > 0
@@ -150,7 +162,7 @@ public class MovieController : BaseAPIController
 
         var updatedMovieResult = await _context.SaveChangesAsync();
 
-        var movieDTO = new ListMovieDTO
+        var movieDTO = new UpdatedMovieListDTO
         {
             Id = existingMovies.Id,
             Name = existingMovies.Name,
@@ -158,7 +170,9 @@ public class MovieController : BaseAPIController
             PlatformName = platform.Name,
             CategoryName = category.Name,
             MovieTime = existingMovies.MovieTime,
-            ReleaseDate = Convert.ToDateTime(existingMovies.ReleaseDate),
+            ReleaseDate = existingMovies.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
+            CreatedDate = existingMovies.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = existingMovies.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
         };
 
         return updatedMovieResult > 0
@@ -212,8 +226,14 @@ public class MovieController : BaseAPIController
         var movieImageDTO = new ListMovieImageDTO
         {
             MovieId = movie.Id,
-            FileNames = movie.MovieImages.Select(p => p.FileName).ToList(),
-            Paths = movie.MovieImages.Select(p => p.Path).ToList()
+            Photos = movie.MovieImages.Select(p => new MovieImageDTO
+            {
+                Id = p.Id,
+                Path = p.Path,
+                FileName = p.FileName
+            }).ToList(),
+            CreatedDate = movie.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = movie.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
         };
 
         return addedMovieImageResult > 0
@@ -236,8 +256,11 @@ public class MovieController : BaseAPIController
         var movieImageDTO = new ListMovieImageDTO
         {
             MovieId = moviePhotos.Id,
-            FileNames = movie.MovieImages.Select(p => p.FileName).ToList(),
-            Paths = movie.MovieImages.Select(p => p.Path).ToList()
+            Photos = movie.MovieImages.Select(p => new MovieImageDTO
+            {
+                Path = p.Path,
+                FileName = p.FileName
+            }).ToList()
         };
 
         return moviePhotos is not null

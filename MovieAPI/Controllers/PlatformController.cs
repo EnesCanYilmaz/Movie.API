@@ -6,7 +6,7 @@ namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 public class PlatformController : BaseAPIController
-{ 
+{
     private readonly MovieAPIDbContext _context;
 
     public PlatformController(MovieAPIDbContext context)
@@ -21,8 +21,8 @@ public class PlatformController : BaseAPIController
         {
             Id = c.Id,
             Name = c.Name,
-            CreatedDate = c.CreatedDate,
-            UpdatedDate = c.UpdatedDate != null ? c.UpdatedDate : Convert.ToDateTime(c.UpdatedDate)
+            CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
         }).ToListAsync();
 
         return platforms is not null
@@ -40,8 +40,8 @@ public class PlatformController : BaseAPIController
         {
             Id = c.Id,
             Name = c.Name,
-            CreatedDate = c.CreatedDate,
-            UpdatedDate = c.UpdatedDate != null ? c.UpdatedDate : Convert.ToDateTime(c.UpdatedDate),
+            CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
             Movies = c.Movies.Select(m => new MovieDTO
             {
                 Id = m.Id,
@@ -49,21 +49,26 @@ public class PlatformController : BaseAPIController
                 Description = m.Description,
                 CategoryName = m.Category.Name,
                 PlatformName = m.Platform.Name,
-                ReleaseDate = m.ReleaseDate.ToString("dd-MM-yyyy"),
+                ReleaseDate = m.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
                 MovieTime = m.MovieTime,
                 Players = m.Players.Select(p => new PlayerDTO
                 {
+                    Id = p.Id,
                     Name = p.Name
                 }).ToList(),
                 Directors = m.Directors.Select(d => new DirectorDTO
                 {
+                    Id = d.Id,
                     Name = d.Name
                 }).ToList(),
                 MovieImages = m.MovieImages.Select(i => new MovieImageDTO
                 {
+                    Id = i.Id,
                     FileName = i.FileName,
                     Path = i.Path
-                }).ToList()
+                }).ToList(),
+                CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+                UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
 
@@ -92,7 +97,7 @@ public class PlatformController : BaseAPIController
         {
             Id = platform.Id,
             Name = platform.Name,
-            CreatedDate = platform.CreatedDate
+            CreatedDate = platform.CreatedDate.ToString("dd.MM.yyyy HH:mm")
         };
 
         return addedPlatformResult > 0
@@ -119,12 +124,12 @@ public class PlatformController : BaseAPIController
 
         var updatedCategoryResult = await _context.SaveChangesAsync();
 
-        var listCategoryDTO = new ListCategoryDTO
+        var listCategoryDTO = new ListPlatformDTO
         {
             Id = existingPlatform.Id,
             Name = existingPlatform.Name,
-            CreatedDate = existingPlatform.CreatedDate,
-            UpdatedDate = existingPlatform.UpdatedDate
+            CreatedDate = existingPlatform.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
+            UpdatedDate = existingPlatform.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
         };
 
         return updatedCategoryResult > 0
@@ -146,7 +151,7 @@ public class PlatformController : BaseAPIController
         _context.Platforms.Remove(platform);
 
         return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Platform deleted by id!", "All movies, actors, directors, photos related to the platform have been deleted!")
-            : StatusCode(500, "Platform not Deleted");
+            ? OK(200, "Platform deleted!", "All movies, actors, directors, photos related to the platform have been deleted!")
+            : StatusCode(500, "Platform not deleted!");
     }
 }
