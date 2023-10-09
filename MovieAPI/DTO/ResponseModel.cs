@@ -11,7 +11,7 @@ namespace MovieAPI.DTO
             public int StatusCode { get; set; }
 
             [JsonProperty("statusMessage")]
-            public string StatusMessage { get; set; }
+            public string? StatusMessage { get; set; }
 
             [JsonProperty("result")]
             public T? Result { get; set; }

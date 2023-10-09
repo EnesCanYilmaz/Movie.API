@@ -1,7 +1,3 @@
-
-
-using MovieAPI.Infrastructure.Data.Entities.Category;
-
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]

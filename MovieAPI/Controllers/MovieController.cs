@@ -1,11 +1,4 @@
-﻿using MovieAPI.DTO.Movie;
-using MovieAPI.DTO.MovieImage;
-using MovieAPI.Infrastructure.Data.Entities.Category;
-using MovieAPI.Infrastructure.Data.Entities.Movie;
-using MovieAPI.Infrastructure.Data.Entities.Platform;
-using MovieAPI.Infrastructure.Data.Entities.Player;
-
-namespace MovieAPI.Controllers;
+﻿namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 public class MovieController : BaseAPIController
@@ -268,4 +261,3 @@ public class MovieController : BaseAPIController
             : StatusCode(500, "Movie photos not found!");
     }
 }
-

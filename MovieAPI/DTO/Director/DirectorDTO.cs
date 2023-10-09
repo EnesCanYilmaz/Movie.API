@@ -1,10 +1,8 @@
-﻿using System;
-namespace MovieAPI.DTO.Director
+﻿namespace MovieAPI.DTO.Director;
+
+public class DirectorDTO
 {
-	public class DirectorDTO
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-	}
+    public int Id { get; set; }
+    public string? Name { get; set; }
 }
 

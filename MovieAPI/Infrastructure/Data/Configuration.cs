@@ -12,7 +12,7 @@ static class Configuration
             configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory()));
             configurationManager.AddJsonFile("appsettings.json");
 
-            return configurationManager.GetConnectionString("MSSQL");
+            return configurationManager.GetConnectionString("MSSQL") ?? "DefaultConnectionString";
         }
     }
 }

@@ -1,12 +1,9 @@
-﻿using System;
-using MovieAPI.Infrastructure.Data.Base;
-
-namespace MovieAPI.Infrastructure.Data.Entities.Category;
+﻿namespace MovieAPI.Infrastructure.Data.Entities.Category;
 
 public class Category : BaseEntity
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    public ICollection<Movie.Movie> Movies { get; set; }
+    public ICollection<Movie.Movie>? Movies { get; set; }
 }
 

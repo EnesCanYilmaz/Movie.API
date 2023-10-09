@@ -9,14 +9,16 @@ public class FileService : IFileService
     {
         _webHostEnvironment = webHostEnvironment;
     }
+
     public async Task DeleteAsync(string path, string fileName)
-        => File.Delete($"{path}/{fileName}");
+        => await Task.Run(() => File.Delete($"{path}/{fileName}"));
 
     public List<string> GetFiles(string path)
     {
         DirectoryInfo directory = new(path);
         return directory.GetFiles().Select(f => f.Name).ToList();
     }
+
     public async Task<bool> CopyFileAsync(string path, IFormFile file)
     {
         try
@@ -27,9 +29,9 @@ public class FileService : IFileService
             await fileStream.FlushAsync();
             return true;
         }
-        catch (Exception ex)
+        catch
         {
-            throw ex;
+            throw;
         }
     }
 

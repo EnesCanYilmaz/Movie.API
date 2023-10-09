@@ -14,6 +14,8 @@ global using MovieAPI.Infrastructure.Data.Entities.Movie;
 global using MovieAPI.Infrastructure.Data.Entities.MovieImage;
 global using MovieAPI.FileRename;
 global using static MovieAPI.DTO.ResponseModelDTO;
-
-
+global using MovieAPI.Infrastructure.Data.Entities.Player;
+global using MovieAPI.Infrastructure.Data.Entities.Director;
+global using MovieAPI.Infrastructure.Data.Base;
+global using Microsoft.AspNetCore.Identity;
 
