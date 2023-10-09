@@ -18,4 +18,6 @@ global using MovieAPI.Infrastructure.Data.Entities.Player;
 global using MovieAPI.Infrastructure.Data.Entities.Director;
 global using MovieAPI.Infrastructure.Data.Base;
 global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using MovieAPI.Infrastructure.Data.Entities.App;
 

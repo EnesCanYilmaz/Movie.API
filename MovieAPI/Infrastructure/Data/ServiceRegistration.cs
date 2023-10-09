@@ -1,9 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using MovieAPI.Infrastructure.Data.Context;
-using MovieAPI.Infrastructure.Data.Entities.App;
-
-namespace MovieAPI.Infrastructure.Data;
+﻿namespace MovieAPI.Infrastructure.Data;
 
 public static class ServiceRegistration
 {

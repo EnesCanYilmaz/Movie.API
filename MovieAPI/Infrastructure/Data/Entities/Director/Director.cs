@@ -1,6 +1,4 @@
-﻿using MovieAPI.Infrastructure.Data.Base;
-
-namespace MovieAPI.Infrastructure.Data.Entities.Director;
+﻿namespace MovieAPI.Infrastructure.Data.Entities.Director;
 
 public class Director : BaseEntity
 {

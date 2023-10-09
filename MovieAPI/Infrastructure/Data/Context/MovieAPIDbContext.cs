@@ -1,16 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using MovieAPI.Infrastructure.Data.Base;
-using MovieAPI.Infrastructure.Data.Entities.App;
-using MovieAPI.Infrastructure.Data.Entities.Category;
-using MovieAPI.Infrastructure.Data.Entities.Director;
-using MovieAPI.Infrastructure.Data.Entities.Movie;
-using MovieAPI.Infrastructure.Data.Entities.Platform;
-using MovieAPI.Infrastructure.Data.Entities.Player;
-using MovieAPI.Infrastructure.Data.Entities.MovieImage;
-
-namespace MovieAPI.Infrastructure.Data.Context;
+﻿namespace MovieAPI.Infrastructure.Data.Context;
 
 public class MovieAPIDbContext : IdentityDbContext<AppUser, AppRole, int>
 {

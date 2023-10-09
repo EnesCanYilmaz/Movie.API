@@ -1,5 +1,4 @@
-﻿using System;
-namespace MovieAPI.Infrastructure.Data;
+﻿namespace MovieAPI.Infrastructure.Data;
 
 static class Configuration
 {

@@ -1,6 +1,4 @@
-﻿using MovieAPI.Infrastructure.Data.Base;
-
-namespace MovieAPI.Infrastructure.Data.Entities.Player;
+﻿namespace MovieAPI.Infrastructure.Data.Entities.Player;
 
 public class Player : BaseEntity
 {
