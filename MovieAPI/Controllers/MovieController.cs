@@ -1,4 +1,6 @@
-﻿namespace MovieAPI.Controllers;
+﻿using MovieAPI.DTO.MovieImage;
+
+namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 public class MovieController : BaseAPIController
@@ -259,5 +261,25 @@ public class MovieController : BaseAPIController
         return moviePhotos is not null
             ? OK(200, "Movie photos list!", movieImageDTO)
             : StatusCode(500, "Movie photos not found!");
+    }
+
+    [HttpDelete("[action]/{id}")]
+    public async Task<IActionResult> DeleteMoviePhoto(int id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
+        var movieImage = await _context.MovieImages.FindAsync(id);
+
+        if (movieImage is null)
+            return NotFound("Movie Photo not Found");
+
+        _context.MovieImages.Remove(movieImage);
+
+        var moviePhotoResult = await _context.SaveChangesAsync();
+
+        return moviePhotoResult > 0
+            ? OK(200, "Deleted!", "Movie photo deleted!")
+            : StatusCode(500, "Movie photo not deleted!");
     }
 }

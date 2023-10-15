@@ -10,7 +10,7 @@ public class DirectorController : BaseAPIController
         _context = context;
     }
 
-    [HttpPost("[action]/{id}")]
+    [HttpPost("[action]")]
     public async Task<IActionResult> CreateDirectors(CreateDirectorDTO createDirectorDTO)
     {
         if (!ModelState.IsValid)
