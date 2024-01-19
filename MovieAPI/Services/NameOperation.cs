@@ -1,4 +1,4 @@
-namespace ECommerceAPI.Infrastructure.Operations;
+namespace MovieAPI.Services;
 
 public static class NameOperation
 {

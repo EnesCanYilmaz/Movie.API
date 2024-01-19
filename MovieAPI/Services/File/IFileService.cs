@@ -1,4 +1,4 @@
-namespace MovieAPI.FileRename;
+namespace MovieAPI.Services.File;
 
 public interface IFileService
 {

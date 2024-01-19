@@ -1,10 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Models;
-using MovieAPI.FileRename;
-using MovieAPI.Infrastructure.Data;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();

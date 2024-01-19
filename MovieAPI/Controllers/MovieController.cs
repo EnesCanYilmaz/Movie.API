@@ -258,9 +258,7 @@ public class MovieController : BaseAPIController
             }).ToList()
         };
 
-        return moviePhotos is not null
-            ? OK(200, "Movie photos list!", movieImageDTO)
-            : StatusCode(500, "Movie photos not found!");
+        return OK(200, "Movie photos list!", movieImageDTO);
     }
 
     [HttpDelete("[action]/{id}")]

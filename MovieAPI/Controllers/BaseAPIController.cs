@@ -1,11 +1,12 @@
-﻿namespace MovieAPI.Controllers;
+﻿
+namespace MovieAPI.Controllers;
 
 public class BaseAPIController : Controller
 {
     [NonAction]
     public IActionResult OK(int statusCode, string statusMessage, object? result)
     {
-        ResponseModel<object> responseModel = new()
+        ResponseModelDto.ResponseModel<object> responseModel = new()
         {
             StatusCode = statusCode,
             StatusMessage = statusMessage,
