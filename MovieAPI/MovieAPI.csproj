@@ -46,6 +46,7 @@
     <None Remove="DTO\User\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Application\Middlewares\" />
     <Folder Include="Infrastructure\" />
     <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\Data\Entities\App\" />

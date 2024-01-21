@@ -3,7 +3,7 @@
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class MovieController : BaseAPIController
+public class MovieController : BaseApıController
 {
     private readonly MovieAPIDbContext _context;
     private readonly IFileService _fileService;
@@ -28,27 +28,12 @@ public class MovieController : BaseAPIController
             ReleaseDate = m.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
             CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
             UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
-            Players = m.Players.Select(p => new PlayerDTO
-            {
-                Id = p.Id,
-                Name = p.Name
-            }).ToList(),
-            Directors = m.Directors.Select(d => new DirectorDTO
-            {
-                Id = d.Id,
-                Name = d.Name
-            }).ToList(),
-            MovieImages = m.MovieImages.Select(i => new MovieImageDTO
-            {
-                Id = i.Id,
-                FileName = i.FileName,
-                Path = i.Path
-            }).ToList()
+            Players = m.Players.Select(p => new PlayerDTO { Id = p.Id, Name = p.Name }).ToList(),
+            Directors = m.Directors.Select(d => new DirectorDTO { Id = d.Id, Name = d.Name }).ToList(),
+            MovieImages = m.MovieImages.Select(i => new MovieImageDTO { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList()
         }).ToListAsync();
 
-        return movies is not null
-            ? OK(200, "Movies Listed!", movies)
-            : StatusCode(500, "Movies not found");
+        return OK(200, "Movies Listed!", movies);
     }
 
     [HttpGet("[action]/{id}")]
@@ -65,28 +50,13 @@ public class MovieController : BaseAPIController
             CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
             UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
             MovieTime = m.MovieTime,
-            Directors = m.Directors.Select(d => new DirectorDTO
-            {
-                Id = d.Id,
-                Name = d.Name
-            }).ToList(),
-            Players = m.Players.Select(p => new PlayerDTO
-            {
-                Id = p.Id,
-                Name = p.Name
-            }).ToList(),
-            MovieImages = m.MovieImages.Select(i => new MovieImageDTO
-            {
-                Id = i.Id,
-                FileName = i.FileName,
-                Path = i.Path
-            }).ToList()
+            Directors = m.Directors.Select(d => new DirectorDTO { Id = d.Id, Name = d.Name }).ToList(),
+            Players = m.Players.Select(p => new PlayerDTO { Id = p.Id, Name = p.Name }).ToList(),
+            MovieImages = m.MovieImages.Select(i => new MovieImageDTO { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList()
         }).FirstOrDefaultAsync(m => m.Id == id);
 
 
-        return movie is not null
-            ? OK(200, "Movie list!", movie)
-            : NotFound("Movie not found!");
+        return OK(200, "Movie list!", movie);
     }
 
     [HttpPost("[action]")]
@@ -127,9 +97,7 @@ public class MovieController : BaseAPIController
             CreatedDate = movie.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
         };
 
-        return addedMovieResult > 0
-            ? OK(200, "Movie added!", movieDTO)
-            : StatusCode(500, "Movie not added!");
+        return OK(200, "Movie added!", movieDTO);
     }
 
 
@@ -170,9 +138,7 @@ public class MovieController : BaseAPIController
             UpdatedDate = existingMovies.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
         };
 
-        return updatedMovieResult > 0
-            ? OK(200, "Movie updated!", movieDTO)
-            : StatusCode(500, "Movie not updated!");
+        return OK(200, "Movie updated!", movieDTO);
     }
 
 
@@ -189,16 +155,13 @@ public class MovieController : BaseAPIController
 
         _context.Movies.Remove(movie);
 
-        return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Movie deleted!", "All actors, directors, photos related to the movies have been deleted")
-            : StatusCode(500, "Movie not deleted!");
+        return OK(200, "Movie deleted!", "All actors, directors, photos related to the movies have been deleted");
     }
 
     [HttpPost("[action]")]
     public async Task<IActionResult> UploadPhoto(CreateMovieImageDTO createMovieImageDTO)
     {
-        List<(string fileName, string pathOrContainerName)>? result = await
-            _fileService.UploadAsync("photo", createMovieImageDTO.Files);
+        List<(string fileName, string pathOrContainerName)>? result = await _fileService.UploadAsync("photo", createMovieImageDTO.Files);
 
         if (result is null)
             return BadRequest("Photo not upload!");
@@ -208,32 +171,17 @@ public class MovieController : BaseAPIController
         if (movie is null)
             return NotFound("Movie not found!");
 
-        List<MovieImage> movieImagesToAdd = result.Select(r => new MovieImage
-        {
-            FileName = r.fileName,
-            Path = r.pathOrContainerName,
-            MovieId = movie.Id
-        }).ToList();
+        List<MovieImage> movieImagesToAdd = result.Select(r => new MovieImage { FileName = r.fileName, Path = r.pathOrContainerName, MovieId = movie.Id }).ToList();
 
         await _context.MovieImages.AddRangeAsync(movieImagesToAdd);
         var addedMovieImageResult = await _context.SaveChangesAsync();
 
         var movieImageDTO = new ListMovieImageDTO
         {
-            MovieId = movie.Id,
-            Photos = movie.MovieImages.Select(p => new MovieImageDTO
-            {
-                Id = p.Id,
-                Path = p.Path,
-                FileName = p.FileName
-            }).ToList(),
-            CreatedDate = movie.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
-            UpdatedDate = movie.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
+            MovieId = movie.Id, Photos = movie.MovieImages.Select(p => new MovieImageDTO { Id = p.Id, Path = p.Path, FileName = p.FileName }).ToList(), CreatedDate = movie.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = movie.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
         };
 
-        return addedMovieImageResult > 0
-            ? OK(200, "Movie photo added!", movieImageDTO)
-            : StatusCode(500, "Movie photo not added!");
+        return OK(200, "Movie photo added!", movieImageDTO);
     }
 
     [HttpGet("[action]/{id}")]
@@ -244,19 +192,9 @@ public class MovieController : BaseAPIController
 
         var movie = await _context.Movies.FindAsync(id);
 
-        var moviePhotos = await _context.Movies
-            .Include(m => m.MovieImages)
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var moviePhotos = await _context.Movies.Include(m => m.MovieImages).FirstOrDefaultAsync(m => m.Id == id);
 
-        var movieImageDTO = new ListMovieImageDTO
-        {
-            MovieId = moviePhotos.Id,
-            Photos = movie.MovieImages.Select(p => new MovieImageDTO
-            {
-                Path = p.Path,
-                FileName = p.FileName
-            }).ToList()
-        };
+        var movieImageDTO = new ListMovieImageDTO { MovieId = moviePhotos.Id, Photos = movie.MovieImages.Select(p => new MovieImageDTO { Path = p.Path, FileName = p.FileName }).ToList() };
 
         return OK(200, "Movie photos list!", movieImageDTO);
     }
@@ -276,8 +214,6 @@ public class MovieController : BaseAPIController
 
         var moviePhotoResult = await _context.SaveChangesAsync();
 
-        return moviePhotoResult > 0
-            ? OK(200, "Deleted!", "Movie photo deleted!")
-            : StatusCode(500, "Movie photo not deleted!");
+        return OK(200, "Deleted!", "Movie photo deleted!");
     }
 }

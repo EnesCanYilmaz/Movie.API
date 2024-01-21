@@ -1,7 +1,7 @@
 ﻿namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class DirectorController : BaseAPIController
+public class DirectorController : BaseApıController
 {
     private readonly MovieAPIDbContext _context;
 
@@ -21,11 +21,7 @@ public class DirectorController : BaseAPIController
         if (movie is null)
             return NotFound("Movie not found!");
 
-        var directors = createDirectorDTO.DirectorNames.Select(request => new Director
-        {
-            MovieId = movie.Id,
-            Name = request
-        }).ToList();
+        var directors = createDirectorDTO.DirectorNames.Select(request => new Director { MovieId = movie.Id, Name = request }).ToList();
 
         await _context.Directors.AddRangeAsync(directors);
 
@@ -40,9 +36,7 @@ public class DirectorController : BaseAPIController
             UpdatedDate = x.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
         }).ToListAsync();
 
-        return directorAddedResult > 0
-            ? OK(200, "Directors added!", directorDto)
-            : StatusCode(500, "Directors not added!");
+        return OK(200, "Directors added!", directorDto);
     }
 
     [HttpGet("[action]/{movieId}")]
@@ -51,15 +45,7 @@ public class DirectorController : BaseAPIController
         if (!ModelState.IsValid)
             return BadRequest();
 
-        var directors = await _context.Directors
-            .Where(p => p.MovieId == movieId)
-            .Select(p => new ListDirectorDTO
-            {
-                Id = p.Id,
-                MovieId = movieId,
-                Name = p.Name
-            })
-        .ToListAsync();
+        var directors = await _context.Directors.Where(p => p.MovieId == movieId).Select(p => new ListDirectorDTO { Id = p.Id, MovieId = movieId, Name = p.Name }).ToListAsync();
 
         var directorDto = await _context.Directors.Where(x => x.MovieId == movieId).Select(x => new ListDirectorDTO
         {
@@ -70,9 +56,7 @@ public class DirectorController : BaseAPIController
             UpdatedDate = x.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
         }).ToListAsync();
 
-        return directors is not null
-            ? OK(200, "Director listed by id!", directorDto)
-            : NotFound("Director Not Found");
+        return OK(200, "Director listed by id!", directorDto);
     }
 
     [HttpDelete("[action]/{id}")]
@@ -81,17 +65,13 @@ public class DirectorController : BaseAPIController
         if (!ModelState.IsValid)
             return BadRequest();
 
-        var director = await _context.Directors
-            .Where(p => p.Id == id).FirstOrDefaultAsync();
+        var director = await _context.Directors.Where(p => p.Id == id).FirstOrDefaultAsync();
 
         if (director is null)
             NotFound("Player not found");
 
         _context.Directors.Remove(director);
 
-        return await _context.SaveChangesAsync() > 0
-                            ? OK(200, "Deleted!", "Director deleted!")
-                            : StatusCode(500, "Director not deleted");
+        return OK(200, "Deleted!", "Director deleted!");
     }
 }
-

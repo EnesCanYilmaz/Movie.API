@@ -1,7 +1,7 @@
 ﻿namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class PlayersController : BaseAPIController
+public class PlayersController : BaseApıController
 {
     private readonly MovieAPIDbContext _context;
 
@@ -21,12 +21,7 @@ public class PlayersController : BaseAPIController
         if (movie is null)
             return NotFound("Movie not found!");
 
-        List<Player> players = createPlayerDTO.PlayerNames.Select(players => new Player
-        {
-            MovieId = movie.Id,
-            Name = players,
-            CreatedDate = DateTime.UtcNow
-        }).ToList();
+        List<Player> players = createPlayerDTO.PlayerNames.Select(players => new Player { MovieId = movie.Id, Name = players, CreatedDate = DateTime.UtcNow }).ToList();
 
         await _context.Players.AddRangeAsync(players);
         var playerAddedResult = await _context.SaveChangesAsync();
@@ -40,9 +35,7 @@ public class PlayersController : BaseAPIController
             UpdatedDate = x.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
         }).ToListAsync();
 
-        return playerAddedResult > 0
-        ? OK(200, "Players added!", playersDto)
-        : StatusCode(500, "Players not added!");
+        return OK(200, "Players added!", playersDto);
     }
 
     [HttpGet("[action]/{movieId}")]
@@ -60,9 +53,7 @@ public class PlayersController : BaseAPIController
             UpdatedDate = x.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
         }).ToListAsync();
 
-        return players is not null
-        ? OK(200, "Player listed by id!", players)
-        : NotFound("Player Not Found");
+        return OK(200, "Player listed by id!", players);
     }
 
     [HttpDelete("[action]/{id}")]
@@ -71,16 +62,13 @@ public class PlayersController : BaseAPIController
         if (!ModelState.IsValid)
             return BadRequest();
 
-        var player = await _context.Players
-            .Where(p => p.Id == id).FirstOrDefaultAsync();
+        var player = await _context.Players.Where(p => p.Id == id).FirstOrDefaultAsync();
 
         if (player is null)
             NotFound("Player not found");
 
         _context.Players.Remove(player);
 
-        return await _context.SaveChangesAsync() > 0
-            ? OK(200, "Deleted!", "Player deleted!")
-            : StatusCode(500, "Player not deleted!");
+        return OK(200, "Deleted!", "Player deleted!");
     }
 }
