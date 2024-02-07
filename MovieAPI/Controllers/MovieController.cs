@@ -3,7 +3,7 @@
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class MovieController : BaseApıController
+public class MovieController : BaseApiController
 {
     private readonly MovieAPIDbContext _context;
     private readonly IFileService _fileService;
@@ -17,7 +17,7 @@ public class MovieController : BaseApıController
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAll()
     {
-        var movies = await _context.Movies.Select(m => new MovieDTO
+        var movies = await _context.Movies.Select(m => new MovieDto
         {
             Id = m.Id,
             Name = m.Name,
@@ -28,9 +28,9 @@ public class MovieController : BaseApıController
             ReleaseDate = m.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
             CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
             UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
-            Players = m.Players.Select(p => new PlayerDTO { Id = p.Id, Name = p.Name }).ToList(),
-            Directors = m.Directors.Select(d => new DirectorDTO { Id = d.Id, Name = d.Name }).ToList(),
-            MovieImages = m.MovieImages.Select(i => new MovieImageDTO { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList()
+            Players = m.Players.Select(p => new PlayerDto { Id = p.Id, Name = p.Name }).ToList(),
+            Directors = m.Directors.Select(d => new DirectorDto { Id = d.Id, Name = d.Name }).ToList(),
+            MovieImages = m.MovieImages.Select(i => new MovieImageDto { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList()
         }).ToListAsync();
 
         return OK(200, "Movies Listed!", movies);
@@ -39,7 +39,7 @@ public class MovieController : BaseApıController
     [HttpGet("[action]/{id}")]
     public async Task<IActionResult> GetByMovieId(int id)
     {
-        var movie = await _context.Movies.Select(m => new MovieDTO
+        var movie = await _context.Movies.Select(m => new MovieDto
         {
             Id = m.Id,
             Name = m.Name,
@@ -50,9 +50,9 @@ public class MovieController : BaseApıController
             CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
             UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
             MovieTime = m.MovieTime,
-            Directors = m.Directors.Select(d => new DirectorDTO { Id = d.Id, Name = d.Name }).ToList(),
-            Players = m.Players.Select(p => new PlayerDTO { Id = p.Id, Name = p.Name }).ToList(),
-            MovieImages = m.MovieImages.Select(i => new MovieImageDTO { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList()
+            Directors = m.Directors.Select(d => new DirectorDto { Id = d.Id, Name = d.Name }).ToList(),
+            Players = m.Players.Select(p => new PlayerDto { Id = p.Id, Name = p.Name }).ToList(),
+            MovieImages = m.MovieImages.Select(i => new MovieImageDto { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList()
         }).FirstOrDefaultAsync(m => m.Id == id);
 
 
@@ -60,7 +60,7 @@ public class MovieController : BaseApıController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateMovie([FromBody] CreateMovieDTO createMovieDTO)
+    public async Task<IActionResult> CreateMovie([FromBody] CreateMovieDto createMovieDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -85,7 +85,7 @@ public class MovieController : BaseApıController
 
         var addedMovieResult = await _context.SaveChangesAsync();
 
-        var movieDTO = new CreatedMovieListDTO
+        var movieDTO = new CreatedMovieListDto
         {
             Id = movie.Id,
             Name = movie.Name,
@@ -102,7 +102,7 @@ public class MovieController : BaseApıController
 
 
     [HttpPut("[action]")]
-    public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDTO updatedMovie)
+    public async Task<IActionResult> UpdateMovie([FromBody] UpdateMovieDto updatedMovie)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -125,7 +125,7 @@ public class MovieController : BaseApıController
 
         var updatedMovieResult = await _context.SaveChangesAsync();
 
-        var movieDTO = new UpdatedMovieListDTO
+        var movieDTO = new UpdatedMovieListDto
         {
             Id = existingMovies.Id,
             Name = existingMovies.Name,
@@ -159,7 +159,7 @@ public class MovieController : BaseApıController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> UploadPhoto(CreateMovieImageDTO createMovieImageDTO)
+    public async Task<IActionResult> UploadPhoto(CreateMovieImageDto createMovieImageDTO)
     {
         List<(string fileName, string pathOrContainerName)>? result = await _fileService.UploadAsync("photo", createMovieImageDTO.Files);
 
@@ -176,9 +176,9 @@ public class MovieController : BaseApıController
         await _context.MovieImages.AddRangeAsync(movieImagesToAdd);
         var addedMovieImageResult = await _context.SaveChangesAsync();
 
-        var movieImageDTO = new ListMovieImageDTO
+        var movieImageDTO = new ListMovieImageDto
         {
-            MovieId = movie.Id, Photos = movie.MovieImages.Select(p => new MovieImageDTO { Id = p.Id, Path = p.Path, FileName = p.FileName }).ToList(), CreatedDate = movie.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = movie.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
+            MovieId = movie.Id, Photos = movie.MovieImages.Select(p => new MovieImageDto { Id = p.Id, Path = p.Path, FileName = p.FileName }).ToList(), CreatedDate = movie.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = movie.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
         };
 
         return OK(200, "Movie photo added!", movieImageDTO);
@@ -194,7 +194,7 @@ public class MovieController : BaseApıController
 
         var moviePhotos = await _context.Movies.Include(m => m.MovieImages).FirstOrDefaultAsync(m => m.Id == id);
 
-        var movieImageDTO = new ListMovieImageDTO { MovieId = moviePhotos.Id, Photos = movie.MovieImages.Select(p => new MovieImageDTO { Path = p.Path, FileName = p.FileName }).ToList() };
+        var movieImageDTO = new ListMovieImageDto { MovieId = moviePhotos.Id, Photos = movie.MovieImages.Select(p => new MovieImageDto { Path = p.Path, FileName = p.FileName }).ToList() };
 
         return OK(200, "Movie photos list!", movieImageDTO);
     }

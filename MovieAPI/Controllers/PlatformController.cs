@@ -1,7 +1,7 @@
 namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class PlatformController : BaseApıController
+public class PlatformController : BaseApiController
 {
     private readonly MovieAPIDbContext _context;
 
@@ -13,7 +13,7 @@ public class PlatformController : BaseApıController
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAllPlatforms()
     {
-        var platforms = await _context.Platforms.Select(c => new ListPlatformDTO { Id = c.Id, Name = c.Name, CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm") }).ToListAsync();
+        var platforms = await _context.Platforms.Select(c => new ListPlatformDto { Id = c.Id, Name = c.Name, CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm") }).ToListAsync();
 
         return OK(200, "All platforms listed!", platforms);
     }
@@ -24,13 +24,13 @@ public class PlatformController : BaseApıController
         if (!ModelState.IsValid)
             return BadRequest();
 
-        var platform = await _context.Platforms.Select(c => new PlatformDTO
+        var platform = await _context.Platforms.Select(c => new PlatformDto
         {
             Id = c.Id,
             Name = c.Name,
             CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
             UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
-            Movies = c.Movies.Select(m => new MovieDTO
+            Movies = c.Movies.Select(m => new MovieDto
             {
                 Id = m.Id,
                 Name = m.Name,
@@ -39,9 +39,9 @@ public class PlatformController : BaseApıController
                 PlatformName = m.Platform.Name,
                 ReleaseDate = m.ReleaseDate.ToString("dd.MM.yyyy HH:mm"),
                 MovieTime = m.MovieTime,
-                Players = m.Players.Select(p => new PlayerDTO { Id = p.Id, Name = p.Name }).ToList(),
-                Directors = m.Directors.Select(d => new DirectorDTO { Id = d.Id, Name = d.Name }).ToList(),
-                MovieImages = m.MovieImages.Select(i => new MovieImageDTO { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList(),
+                Players = m.Players.Select(p => new PlayerDto { Id = p.Id, Name = p.Name }).ToList(),
+                Directors = m.Directors.Select(d => new DirectorDto { Id = d.Id, Name = d.Name }).ToList(),
+                MovieImages = m.MovieImages.Select(i => new MovieImageDto { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList(),
                 CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
                 UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm")
             }).ToList()
@@ -62,13 +62,13 @@ public class PlatformController : BaseApıController
 
         var addedPlatformResult = await _context.SaveChangesAsync();
 
-        var platformDto = new CreatePlatformDTO { Id = platform.Id, Name = platform.Name, CreatedDate = platform.CreatedDate.ToString("dd.MM.yyyy HH:mm") };
+        var platformDto = new CreatePlatformDto { Id = platform.Id, Name = platform.Name, CreatedDate = platform.CreatedDate.ToString("dd.MM.yyyy HH:mm") };
 
         return OK(200, "Platform added!", platformDto);
     }
 
     [HttpPut("[action]")]
-    public async Task<IActionResult> UpdatePlatform([FromBody] UpdatePlatformDTO updatePlatformDTO)
+    public async Task<IActionResult> UpdatePlatform([FromBody] UpdatePlatformDto updatePlatformDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -86,7 +86,7 @@ public class PlatformController : BaseApıController
 
         var updatedCategoryResult = await _context.SaveChangesAsync();
 
-        var listCategoryDTO = new ListPlatformDTO { Id = existingPlatform.Id, Name = existingPlatform.Name, CreatedDate = existingPlatform.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = existingPlatform.UpdatedDate.ToString("dd.MM.yyyy HH:mm") };
+        var listCategoryDTO = new ListPlatformDto { Id = existingPlatform.Id, Name = existingPlatform.Name, CreatedDate = existingPlatform.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = existingPlatform.UpdatedDate.ToString("dd.MM.yyyy HH:mm") };
 
         return OK(200, "Platform updated!", listCategoryDTO);
     }

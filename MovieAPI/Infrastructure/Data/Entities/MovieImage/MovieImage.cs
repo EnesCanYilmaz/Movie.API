@@ -1,3 +1,5 @@
+using MovieAPI.Infrastructure.Data.Entities.Base;
+
 namespace MovieAPI.Infrastructure.Data.Entities.MovieImage;
 
 public class MovieImage : BaseEntity

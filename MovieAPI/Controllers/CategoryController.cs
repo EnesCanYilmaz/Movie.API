@@ -1,19 +1,23 @@
-﻿namespace MovieAPI.Controllers;
+﻿using MovieAPI.Application.Services.Category;
+
+namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class CategoryController : BaseApıController
+public class CategoryController : BaseApiController
 {
     private readonly MovieAPIDbContext _context;
+    private readonly CategoryService _categoryService;
 
-    public CategoryController(MovieAPIDbContext context)
+    public CategoryController(MovieAPIDbContext context, CategoryService categoryService)
     {
         _context = context;
+        _categoryService = categoryService;
     }
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAllCategories()
     {
-        var categories = await _context.Categories.Select(c => new ListCategoryDTO { Id = c.Id, Name = c.Name, CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm") }).ToListAsync();
+        var categories = await _context.Categories.Select(c => new ListCategoryDto { Id = c.Id, Name = c.Name, CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm") }).ToListAsync();
 
         return OK(200, "All categories listed!", categories);
     }
@@ -21,13 +25,13 @@ public class CategoryController : BaseApıController
     [HttpGet("[action]/{id}")]
     public async Task<IActionResult> GetByCategoryId(int id)
     {
-        var category = await _context.Categories.Select(c => new CategoryDTO
+        var category = await _context.Categories.Select(c => new CategoryDto
         {
             Id = c.Id,
             Name = c.Name,
             CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
             UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
-            Movies = c.Movies.Select(m => new MovieDTO
+            Movies = c.Movies.Select(m => new MovieDto
             {
                 Id = m.Id,
                 Name = m.Name,
@@ -38,9 +42,9 @@ public class CategoryController : BaseApıController
                 MovieTime = m.MovieTime,
                 CreatedDate = m.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
                 UpdatedDate = m.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
-                Players = m.Players.Select(p => new PlayerDTO { Id = p.Id, Name = p.Name }).ToList(),
-                Directors = m.Directors.Select(d => new DirectorDTO { Id = d.Id, Name = d.Name }).ToList(),
-                MovieImages = m.MovieImages.Select(i => new MovieImageDTO { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList(),
+                Players = m.Players.Select(p => new PlayerDto { Id = p.Id, Name = p.Name }).ToList(),
+                Directors = m.Directors.Select(d => new DirectorDto { Id = d.Id, Name = d.Name }).ToList(),
+                MovieImages = m.MovieImages.Select(i => new MovieImageDto { Id = i.Id, FileName = i.FileName, Path = i.Path }).ToList(),
             }).ToList()
         }).FirstOrDefaultAsync(c => c.Id == id);
 
@@ -59,13 +63,13 @@ public class CategoryController : BaseApıController
 
         var addedCategoryResult = await _context.SaveChangesAsync();
 
-        var categoryDto = new CreateCategoryDTO { Id = category.Id, Name = category.Name, CreatedDate = category.CreatedDate.ToString("dd.MM.yyyy HH:mm") };
+        var categoryDto = new CreateCategoryDto { Id = category.Id, Name = category.Name, CreatedDate = category.CreatedDate.ToString("dd.MM.yyyy HH:mm") };
 
         return OK(200, "Category added!", categoryDto);
     }
 
     [HttpPut("[action]")]
-    public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDTO updateCategoryDTO)
+    public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDto updateCategoryDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -84,7 +88,7 @@ public class CategoryController : BaseApıController
 
         var updatedCategoryResult = await _context.SaveChangesAsync();
 
-        var listCategoryDTO = new ListCategoryDTO { Id = existingCategory.Id, Name = existingCategory.Name, CreatedDate = existingCategory.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = existingCategory.UpdatedDate.ToString("dd.MM.yyyy HH:mm") };
+        var listCategoryDTO = new ListCategoryDto { Id = existingCategory.Id, Name = existingCategory.Name, CreatedDate = existingCategory.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = existingCategory.UpdatedDate.ToString("dd.MM.yyyy HH:mm") };
 
         return OK(200, "Category updated!", listCategoryDTO);
     }

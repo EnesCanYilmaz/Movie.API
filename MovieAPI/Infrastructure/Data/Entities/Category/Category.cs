@@ -1,4 +1,6 @@
-﻿namespace MovieAPI.Infrastructure.Data.Entities.Category;
+﻿using MovieAPI.Infrastructure.Data.Entities.Base;
+
+namespace MovieAPI.Infrastructure.Data.Entities.Category;
 
 public class Category : BaseEntity
 {

@@ -1,7 +1,7 @@
 ﻿namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class DirectorController : BaseApıController
+public class DirectorController : BaseApiController
 {
     private readonly MovieAPIDbContext _context;
 
@@ -11,7 +11,7 @@ public class DirectorController : BaseApıController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateDirectors(CreateDirectorDTO createDirectorDTO)
+    public async Task<IActionResult> CreateDirectors(CreateDirectorDto createDirectorDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -27,7 +27,7 @@ public class DirectorController : BaseApıController
 
         var directorAddedResult = await _context.SaveChangesAsync();
 
-        var directorDto = await _context.Directors.Where(x => x.MovieId == createDirectorDTO.Id).Select(x => new ListDirectorDTO
+        var directorDto = await _context.Directors.Where(x => x.MovieId == createDirectorDTO.Id).Select(x => new ListDirectorDto
         {
             Id = x.Id,
             Name = x.Name,
@@ -45,9 +45,9 @@ public class DirectorController : BaseApıController
         if (!ModelState.IsValid)
             return BadRequest();
 
-        var directors = await _context.Directors.Where(p => p.MovieId == movieId).Select(p => new ListDirectorDTO { Id = p.Id, MovieId = movieId, Name = p.Name }).ToListAsync();
+        var directors = await _context.Directors.Where(p => p.MovieId == movieId).Select(p => new ListDirectorDto { Id = p.Id, MovieId = movieId, Name = p.Name }).ToListAsync();
 
-        var directorDto = await _context.Directors.Where(x => x.MovieId == movieId).Select(x => new ListDirectorDTO
+        var directorDto = await _context.Directors.Where(x => x.MovieId == movieId).Select(x => new ListDirectorDto
         {
             Id = x.Id,
             Name = x.Name,

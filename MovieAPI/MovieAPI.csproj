@@ -48,9 +48,7 @@
   <ItemGroup>
     <Folder Include="Application\Middlewares\" />
     <Folder Include="Infrastructure\" />
-    <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\Data\Entities\App\" />
-    <Folder Include="Infrastructure\Data\Base\" />
     <Folder Include="Infrastructure\Data\Context\" />
     <Folder Include="Infrastructure\Data\Entities\Movie\" />
     <Folder Include="Infrastructure\Data\Entities\Category\" />
@@ -58,11 +56,11 @@
     <Folder Include="wwwroot\" />
     <Folder Include="Services\File\" />
     <Folder Include="Infrastructure\Data\Entities\Director\" />
-    <Folder Include="DTO\Movie\" />
-    <Folder Include="DTO\Category\" />
-    <Folder Include="DTO\Director\" />
-    <Folder Include="DTO\MovieImage\" />
-    <Folder Include="DTO\Player\" />
+    <Folder Include="Dto\Movie\" />
+    <Folder Include="Dto\Category\" />
+    <Folder Include="Dto\Director\" />
+    <Folder Include="Dto\MovieImage\" />
+    <Folder Include="Dto\Player\" />
     <Folder Include="wwwroot\photo\" />
   </ItemGroup>
   <ItemGroup>

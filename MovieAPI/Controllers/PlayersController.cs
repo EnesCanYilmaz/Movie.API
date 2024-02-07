@@ -1,7 +1,7 @@
 ﻿namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
-public class PlayersController : BaseApıController
+public class PlayersController : BaseApiController
 {
     private readonly MovieAPIDbContext _context;
 
@@ -11,7 +11,7 @@ public class PlayersController : BaseApıController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreatePlayers(CreatePlayerDTO createPlayerDTO)
+    public async Task<IActionResult> CreatePlayers(CreatePlayerDto createPlayerDTO)
     {
         if (!ModelState.IsValid)
             return BadRequest();
@@ -26,7 +26,7 @@ public class PlayersController : BaseApıController
         await _context.Players.AddRangeAsync(players);
         var playerAddedResult = await _context.SaveChangesAsync();
 
-        var playersDto = await _context.Players.Where(x => x.MovieId == createPlayerDTO.Id).Select(x => new ListPlayerDTO
+        var playersDto = await _context.Players.Where(x => x.MovieId == createPlayerDTO.Id).Select(x => new ListPlayerDto
         {
             Id = x.Id,
             Name = x.Name,
@@ -44,7 +44,7 @@ public class PlayersController : BaseApıController
         if (!ModelState.IsValid)
             return BadRequest();
 
-        var players = await _context.Players.Where(x => x.MovieId == movieId).Select(x => new ListPlayerDTO
+        var players = await _context.Players.Where(x => x.MovieId == movieId).Select(x => new ListPlayerDto
         {
             Id = x.Id,
             Name = x.Name,
