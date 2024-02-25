@@ -24,3 +24,4 @@ global using System.Text.Json.Serialization;
 global using Newtonsoft.Json;
 global using MovieAPI.Dto;
 global using System.Linq.Expressions;
+global using MovieAPI.Dto.Auth;
