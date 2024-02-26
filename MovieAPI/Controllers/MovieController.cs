@@ -211,6 +211,7 @@ public class MovieController : BaseApiController
             return NotFound("Movie Photo not Found");
 
         _context.MovieImages.Remove(movieImage);
+        await _context.SaveChangesAsync();
 
         var moviePhotoResult = await _context.SaveChangesAsync();
 

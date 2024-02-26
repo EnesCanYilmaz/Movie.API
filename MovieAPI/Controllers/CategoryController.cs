@@ -101,6 +101,7 @@ public class CategoryController : BaseApiController
             return NotFound("Category not found!");
 
         _context.Categories.Remove(category);
+        await _context.SaveChangesAsync();
 
         return OK(200, "Category deleted by id!", "All movies, actors, directors, photos related to the category have been deleted!");
     }

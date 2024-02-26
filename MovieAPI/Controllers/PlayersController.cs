@@ -68,6 +68,7 @@ public class PlayersController : BaseApiController
             NotFound("Player not found");
 
         _context.Players.Remove(player);
+        await _context.SaveChangesAsync();
 
         return OK(200, "Deleted!", "Player deleted!");
     }

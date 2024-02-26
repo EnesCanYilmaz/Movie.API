@@ -103,6 +103,7 @@ public class PlatformController : BaseApiController
             return NotFound("Platform not found!");
 
         _context.Platforms.Remove(platform);
+        await _context.SaveChangesAsync();
 
         return OK(200, "Platform deleted!", "All movies, actors, directors, photos related to the platform have been deleted!");
     }

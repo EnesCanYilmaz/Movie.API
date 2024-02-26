@@ -71,6 +71,8 @@ public class DirectorController : BaseApiController
             NotFound("Player not found");
 
         _context.Directors.Remove(director);
+        await _context.SaveChangesAsync();
+
 
         return OK(200, "Deleted!", "Director deleted!");
     }
