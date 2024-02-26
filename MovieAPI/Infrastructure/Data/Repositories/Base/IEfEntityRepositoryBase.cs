@@ -1,7 +1,7 @@
 
 namespace MovieAPI.Infrastructure.Data.Repositories.Base;
 
-public partial interface IEfEntityRepository<T> where T : class, IEntity, new()
+public interface IEfEntityRepository<T> where T : class, IEntity, new()
 {
     IQueryable<T> GetAll(bool tracking = true);
     IQueryable<T> GetWhere(Expression<Func<T, bool>> method, bool tracking = true);

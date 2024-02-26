@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MovieAPI.Application.Services.Token;
 using MovieAPI.Application.Services.User;
+using MovieAPI.Infrastructure.Data.Repositories.Category;
 using TokenHandler = MovieAPI.Application.Services.Token.TokenHandler;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddInfrastructureServices();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenHandler, TokenHandler>();
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

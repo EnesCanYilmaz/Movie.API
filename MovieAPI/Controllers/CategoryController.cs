@@ -1,17 +1,13 @@
-﻿using MovieAPI.Application.Services.Category;
-
-namespace MovieAPI.Controllers;
+﻿namespace MovieAPI.Controllers;
 
 [Route("api/[controller]")]
 public class CategoryController : BaseApiController
 {
     private readonly MovieAPIDbContext _context;
-    private readonly CategoryService _categoryService;
 
-    public CategoryController(MovieAPIDbContext context, CategoryService categoryService)
+    public CategoryController(MovieAPIDbContext context)
     {
         _context = context;
-        _categoryService = categoryService;
     }
 
     [HttpGet("[action]")]
