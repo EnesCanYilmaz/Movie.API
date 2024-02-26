@@ -1,6 +1,12 @@
 ﻿global using System;
+global using System.Text;
+global using System.Security.Claims;
+global using System.Security.Cryptography;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Linq.Expressions;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.IdentityModel.Tokens;
 global using MovieAPI.DTO.Category;
 global using MovieAPI.DTO.Director;
 global using MovieAPI.DTO.Movie;
@@ -20,8 +26,12 @@ global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using MovieAPI.Infrastructure.Data.Entities.App;
 global using MovieAPI.Infrastructure.Data;
+global using MovieAPI.Dto;
+global using MovieAPI.Dto.Auth;
 global using System.Text.Json.Serialization;
 global using Newtonsoft.Json;
-global using MovieAPI.Dto;
-global using System.Linq.Expressions;
-global using MovieAPI.Dto.Auth;
+global using MovieAPI.Application.Services.Token;
+global using MovieAPI.Application.Services.User;
+global using TokenHandler = MovieAPI.Application.Services.Token.TokenHandler;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+

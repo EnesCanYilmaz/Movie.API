@@ -1,41 +1,29 @@
-using MovieAPI.Application.Services.Token;
-using MovieAPI.Application.Services.User;
-
 namespace MovieAPI.Controllers;
 
 [Route("api/v1/[controller]/[action]")]
 [ApiController]
 public class AuthController : BaseApiController
 {
-    private readonly UserManager<AppUser> _userManager;
     private readonly IUserService _userService;
     private readonly ITokenHandler _tokenHandler;
-    private readonly SignInManager<AppUser> _signInManager;
 
-    public AuthController(UserManager<AppUser> userManager, IUserService userService, SignInManager<AppUser> signInManager, ITokenHandler tokenHandler)
+    public AuthController(IUserService userService, ITokenHandler tokenHandler)
     {
-        _userManager = userManager;
         _userService = userService;
-        _signInManager = signInManager;
         _tokenHandler = tokenHandler;
     }
 
     [HttpPost]
     public async Task<IActionResult> Login(SignInRequestModel signInModel)
     {
-        var user = await _userManager.FindByEmailAsync(signInModel.UserNameOrEmail) ?? await _userManager.FindByNameAsync(signInModel.UserNameOrEmail);
+        var loginResponse = await _userService.LoginAsync(signInModel);
 
-        if (user is null)
-            return OK(400, "Kullanıcı bulunamadı.", null);
+        if (!loginResponse.Succeeded)
+            return OK(400, loginResponse.Message, null);
 
-        var signInResult = await _signInManager.CheckPasswordSignInAsync(user, signInModel.Password, false);
-
-        if (!signInResult.Succeeded)
-            return OK(400, "Giriş başarısız", null);
-
-        var token = _tokenHandler.CreateAccessToken(900, user);
-        await _userService.UpdateRefreshTokenAsync(token.RefreshToken, user, token.Expiration, 15);
-        return OK(400, "Giriş başarılı.", token);
+        var token = _tokenHandler.CreateAccessToken(900, loginResponse.User);
+        await _userService.UpdateRefreshTokenAsync(token.RefreshToken, loginResponse.User, token.Expiration, 15);
+        return OK(400, loginResponse.Message, token);
     }
 
     [HttpPost]

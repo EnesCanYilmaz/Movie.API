@@ -1,14 +1,10 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
+
 
 namespace MovieAPI.Application.Services.Token;
 
 public class TokenHandler : ITokenHandler
 {
-    public Dto.Token.Token CreateAccessToken(int second, AppUser appUser)
+    public Dto.Token.Token CreateAccessToken(int second, AppUser? appUser)
     {
         Dto.Token.Token token = new();
 
