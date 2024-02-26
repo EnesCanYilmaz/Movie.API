@@ -34,4 +34,5 @@ global using MovieAPI.Application.Services.Token;
 global using MovieAPI.Application.Services.User;
 global using TokenHandler = MovieAPI.Application.Services.Token.TokenHandler;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using MovieAPI.Infrastructure.Data.Repositories.Base;
 

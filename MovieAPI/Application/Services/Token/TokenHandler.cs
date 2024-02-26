@@ -1,5 +1,3 @@
-
-
 namespace MovieAPI.Application.Services.Token;
 
 public class TokenHandler : ITokenHandler

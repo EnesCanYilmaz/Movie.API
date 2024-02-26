@@ -27,7 +27,7 @@ public class CategoryController : BaseApiController
             Name = c.Name,
             CreatedDate = c.CreatedDate.ToString("dd.MM.yyyy HH:mm"),
             UpdatedDate = c.UpdatedDate.ToString("dd.MM.yyyy HH:mm"),
-            Movies = c.Movies.Select(m => new MovieDto
+            Movies = (c.Movies).Select(m => new MovieDto
             {
                 Id = m.Id,
                 Name = m.Name,
@@ -57,7 +57,7 @@ public class CategoryController : BaseApiController
 
         await _context.Categories.AddAsync(category);
 
-        var addedCategoryResult = await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         var categoryDto = new CreateCategoryDto { Id = category.Id, Name = category.Name, CreatedDate = category.CreatedDate.ToString("dd.MM.yyyy HH:mm") };
 
@@ -81,12 +81,11 @@ public class CategoryController : BaseApiController
         existingCategory.Name = updateCategoryDTO.Name;
         existingCategory.UpdatedDate = DateTime.UtcNow;
 
+        await _context.SaveChangesAsync();
 
-        var updatedCategoryResult = await _context.SaveChangesAsync();
+        var listCategoryDto = new ListCategoryDto { Id = existingCategory.Id, Name = existingCategory.Name, CreatedDate = existingCategory.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = existingCategory.UpdatedDate.ToString("dd.MM.yyyy HH:mm") };
 
-        var listCategoryDTO = new ListCategoryDto { Id = existingCategory.Id, Name = existingCategory.Name, CreatedDate = existingCategory.CreatedDate.ToString("dd.MM.yyyy HH:mm"), UpdatedDate = existingCategory.UpdatedDate.ToString("dd.MM.yyyy HH:mm") };
-
-        return OK(200, "Category updated!", listCategoryDTO);
+        return OK(200, "Category updated!", listCategoryDto);
     }
 
     [HttpDelete("[action]/{id}")]
