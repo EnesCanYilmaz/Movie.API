@@ -23,7 +23,7 @@ public class AuthController : BaseApiController
 
         var token = _tokenHandler.CreateAccessToken(900, loginResponse.User);
         await _userService.UpdateRefreshTokenAsync(token.RefreshToken, loginResponse.User, token.Expiration, 15);
-        return OK(400, loginResponse.Message, token);
+        return OK(200, loginResponse.Message, token);
     }
 
     [HttpPost]

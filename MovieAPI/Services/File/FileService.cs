@@ -38,10 +38,10 @@ public class FileService : IFileService
         List<(string fileName, string pathOrContainerName)> datas = new();
         foreach (var file in files)
         {
-            var fileNewName = await FileRenameAsync(uploadPath, file.FileName, HasFile(uploadPath,file.FileName));
-            
+            var fileNewName = await FileRenameAsync(uploadPath, file.FileName, HasFile(uploadPath, file.FileName));
+        
             await CopyFileAsync($"{uploadPath}/{fileNewName}", file);
-            datas.Add((fileNewName, $"{path}/{file.FileName}"));
+            datas.Add((fileNewName, $"{path}/{fileNewName}"));
         }
 
         return datas;

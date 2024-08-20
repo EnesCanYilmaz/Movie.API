@@ -27,6 +27,7 @@ public class UserService : IUserService
 
         response.Message = "Giriş başarılı";
         response.Succeeded = true;
+        response.User = user;
         return response;
     }
     
